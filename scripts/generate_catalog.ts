@@ -8,7 +8,8 @@ import { join } from 'node:path';
 
 const root = process.cwd();
 const pluginDir = join(root, 'plugin');
-const base = 'https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main';
+// Pages 实时部署，无 raw CDN 缓存问题；downloadUrl 保持各插件仓库的 release 资产
+const base = 'https://micyou-dev.github.io/MicYou-Plugins';
 const gh = 'https://github.com/MicYou-Dev/MicYou-Plugins/tree/main';
 
 interface Manifest {
