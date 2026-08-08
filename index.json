@@ -1,7 +1,7 @@
 {
   "name": "MicYou Plugins",
   "description": "MicYou 插件市场目录（应用内「检查更新」与本页面均读取此清单）",
-  "updatedAt": "2026-08-08T05:39:05.796Z",
+  "updatedAt": "2026-08-08T05:39:58.509Z",
   "plugins": [
     {
       "id": "dev.micyou.example.audioinspector",
