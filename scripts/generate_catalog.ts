@@ -25,6 +25,8 @@ interface Manifest {
   repository?: string;
   nameI18n?: Record<string, string>;
   descriptionI18n?: Record<string, string>;
+  arches?: string[];
+  platforms?: string[];
 }
 
 const entries: Manifest[] = [];
@@ -56,7 +58,10 @@ const catalog = {
     repository: m.repository ?? '',
     manifestUrl: `${base}/plugin/${m.id}/plugin.json`,
     downloadUrl: `${base}/plugin/${m.id}/plugin.zip`,
+    previewUrl: `${base}/plugin/${m.id}/preview.png`,
     pageUrl: `${gh}/plugin/${m.id}`,
+    arches: m.arches ?? [],
+    platforms: m.platforms ?? [],
   })),
 };
 
