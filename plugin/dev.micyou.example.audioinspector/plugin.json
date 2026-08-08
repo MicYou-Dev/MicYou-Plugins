@@ -1,15 +1,12 @@
 {
   "id": "dev.micyou.example.audioinspector",
-  "name": "Audio Inspector",
+  "name": "Example: Audio Inspector",
   "nameI18n": {
-    "zh-CN": "音频监视器",
-    "zh-TW": "音訊監視器",
-    "en": "Audio Inspector"
+    "zh-CN": "示例插件：音频监视器"
   },
-  "description": "WASM 音频状态监视器：interval 采样 audio_state + connected_devices 并持久化",
+  "description": "WASM example plugin: samples audio_state + connected_devices on an interval and persists them",
   "descriptionI18n": {
-    "zh-CN": "标准示例：每 2 秒采样音频状态与设备，面板实时显示",
-    "en": "Standard example: samples audio state and devices every 2s, shown live in the panel"
+    "zh-CN": "WASM 示例插件：定时采样音频状态与连接设备并持久化，演示 set_interval/audio_state/set_config/面板"
   },
   "version": "1.0.0",
   "author": "MicYou",
@@ -47,6 +44,5 @@
     "audio",
     "monitor",
     "example"
-  ],
-  "downloadUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/releases/download/plugins-v1/dev.micyou.example.audioinspector.zip"
+  ]
 }
