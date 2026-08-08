@@ -25,9 +25,7 @@ MicYou 的插件市场仓库：插件目录与打包产物
 
 | 名称 | ID | 运行时 | 类型 | 版本 | 作者 | 能力 | 下载 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Pomodoro Timer](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.pomodoro) | `dev.micyou.example.pomodoro` | wasm | utility | 1.0.0 | LanRhyme | config.read, config.write | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.pomodoro/plugin.zip) |
-| [Example Soundpad](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.soundpad) | `dev.micyou.example.soundpad` | native | utility | 1.0.0 | MicYou | config.read, config.write, audio.play | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.soundpad/plugin.zip) |
-| [Example VoiceChanger](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.voicechanger) | `dev.micyou.example.voicechanger` | wasm | dsp | 1.0.0 | MicYou | dsp.node, config.read, config.write | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.voicechanger/plugin.zip) |
+| [Audio Inspector](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector) | `dev.micyou.example.audioinspector` | native | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.zip) |
 
 ## 贡献插件
 

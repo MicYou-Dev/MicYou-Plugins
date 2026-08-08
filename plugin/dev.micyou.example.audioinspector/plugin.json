@@ -1,0 +1,48 @@
+{
+  "id": "dev.micyou.example.audioinspector",
+  "name": "Audio Inspector",
+  "nameI18n": {
+    "zh-CN": "音频监视器",
+    "zh-TW": "音訊監視器",
+    "en": "Audio Inspector"
+  },
+  "description": "标准示例插件：定时采样宿主音频状态与设备并在面板实时显示",
+  "descriptionI18n": {
+    "zh-CN": "标准示例：每 2 秒采样音频状态与设备，面板实时显示",
+    "en": "Standard example: samples audio state and devices every 2s, shown live in the panel"
+  },
+  "version": "1.0.0",
+  "author": "MicYou",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/MicYou-Dev/MicYou-Plugins",
+  "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
+  "runtime": "native",
+  "entry": "libmicyou_example_audio_inspector.so",
+  "apiVersion": 1,
+  "kind": "utility",
+  "capabilities": [
+    "config.read",
+    "config.write",
+    "audio.state",
+    "device.list"
+  ],
+  "arches": [
+    "x86_64"
+  ],
+  "ui": {
+    "label": "音频监视器",
+    "panels": [
+      {
+        "id": "inspector",
+        "label": "监视器",
+        "entry": "panel.html",
+        "sidebar": true
+      }
+    ],
+    "route": "plugin-panel"
+  },
+  "config": {
+    "state": ""
+  },
+  "updateUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.json"
+}
