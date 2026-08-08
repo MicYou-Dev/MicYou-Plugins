@@ -27,7 +27,7 @@
       "homepage": "https://github.com/MicYou-Dev/MicYou-Plugins",
       "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
       "manifestUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.json",
-      "downloadUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.zip",
+      "downloadUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/releases/download/plugins-v1/dev.micyou.example.audioinspector.zip",
       "previewUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector",
       "arches": [],
