@@ -25,7 +25,7 @@ MicYou 的插件市场仓库：插件目录与打包产物
 
 | 名称 | ID | 运行时 | 类型 | 版本 | 作者 | 能力 | 下载 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Audio Inspector](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector) | `dev.micyou.example.audioinspector` | native | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.zip) |
+| [Audio Inspector](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector) | `dev.micyou.example.audioinspector` | wasm | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | [zip](https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.zip) |
 
 ## 贡献插件
 

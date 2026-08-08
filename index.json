@@ -1,7 +1,7 @@
 {
   "name": "MicYou Plugins",
   "description": "MicYou 插件市场目录（应用内「检查更新」与本页面均读取此清单）",
-  "updatedAt": "2026-08-08T05:39:58.509Z",
+  "updatedAt": "2026-08-08T06:47:46.485Z",
   "plugins": [
     {
       "id": "dev.micyou.example.audioinspector",
@@ -13,12 +13,12 @@
       },
       "version": "1.0.0",
       "author": "MicYou",
-      "description": "标准示例插件：定时采样宿主音频状态与设备并在面板实时显示",
+      "description": "WASM 音频状态监视器：interval 采样 audio_state + connected_devices 并持久化",
       "descriptionI18n": {
         "zh-CN": "标准示例：每 2 秒采样音频状态与设备，面板实时显示",
         "en": "Standard example: samples audio state and devices every 2s, shown live in the panel"
       },
-      "runtime": "native",
+      "runtime": "wasm",
       "kind": "utility",
       "capabilities": [
         "config.read",

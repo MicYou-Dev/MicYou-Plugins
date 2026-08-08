@@ -109,7 +109,7 @@ call('locale').catch(() => 'en').then((lang) => {
 
 const fmt = (v, digits) => (v == null || isNaN(v)) ? '—' : Number(v).toFixed(digits == null ? 0 : digits);
 function render(cfg) {
-  const audio = (cfg && cfg.audio) || {};
+  const audio = (cfg && (cfg.audioState || cfg.audio)) || {};
   const devs = (cfg && Array.isArray(cfg.devices)) ? cfg.devices : [];
   const s = document.getElementById('stream');
   s.textContent = audio.streaming ? t.streaming : t.idle;
