@@ -38,7 +38,7 @@
   "config": {
     "state": ""
   },
-  "updateUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.json",
+  "updateUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.audioinspector/plugin.json",
   "keywords": [
     "wasm",
     "audio",
