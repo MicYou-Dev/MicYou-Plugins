@@ -41,7 +41,8 @@ for (const dir of readdirSync(pluginDir).sort()) {
 const catalog = {
   name: 'MicYou Plugins',
   description: 'MicYou 插件市场目录（应用内「检查更新」与本页面均读取此清单）',
-  updatedAt: new Date().toISOString(),
+  // updatedAt 固定不变，避免 CI 每次生成都触发 auto-commit 冲突循环
+  updatedAt: "2026-08-08T00:00:00.000Z",
   plugins: entries.map((m) => ({
     id: m.id,
     name: m.name,
