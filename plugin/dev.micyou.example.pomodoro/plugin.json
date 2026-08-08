@@ -1,0 +1,74 @@
+{
+  "id": "dev.micyou.example.pomodoro",
+  "name": "Pomodoro Timer",
+  "version": "1.0.0",
+  "author": "LanRhyme",
+  "description": "番茄钟定时器（纯 WASM）：set_interval + notify，配置表单自动生成",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/LanRhyme/MicYou",
+  "keywords": [
+    "pomodoro",
+    "timer",
+    "utility"
+  ],
+  "runtime": "wasm",
+  "entry": "pomodoro.wasm",
+  "platforms": [
+    "linux",
+    "windows",
+    "macos"
+  ],
+  "arches": [],
+  "apiVersion": 1,
+  "minHostVersion": "1.0.0",
+  "capabilities": [
+    "config.read",
+    "config.write"
+  ],
+  "kind": "utility",
+  "ui": {
+    "route": "plugin-panel",
+    "label": "番茄钟",
+    "panels": [
+      {
+        "id": "control",
+        "label": "番茄钟控制",
+        "entry": "panel.html",
+        "sidebar": true
+      }
+    ]
+  },
+  "config": {},
+  "nameI18n": {
+    "zh-CN": "番茄钟"
+  },
+  "descriptionI18n": {
+    "zh-CN": "专注计时器：工作时长与休息提醒"
+  },
+  "configSchema": {
+    "fields": [
+      {
+        "key": "workMin",
+        "fieldType": "number",
+        "label": "工作时长（分钟）",
+        "description": "一个番茄的工作时长",
+        "min": 1,
+        "max": 120,
+        "step": 1,
+        "default": 25
+      },
+      {
+        "key": "breakMin",
+        "fieldType": "number",
+        "label": "休息时长（分钟）",
+        "description": "工作结束后的休息时长",
+        "min": 1,
+        "max": 60,
+        "step": 1,
+        "default": 5
+      }
+    ]
+  },
+  "updateUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.pomodoro/plugin.json",
+  "repository": "https://github.com/MicYou-Dev/MicYou-Plugins"
+}

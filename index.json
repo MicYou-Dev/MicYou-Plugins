@@ -1,0 +1,80 @@
+{
+  "name": "MicYou Plugins",
+  "description": "MicYou 插件市场目录（应用内「检查更新」与本页面均读取此清单）",
+  "updatedAt": "2026-08-08T05:15:20.065Z",
+  "plugins": [
+    {
+      "id": "dev.micyou.example.pomodoro",
+      "name": "Pomodoro Timer",
+      "nameI18n": {
+        "zh-CN": "番茄钟"
+      },
+      "version": "1.0.0",
+      "author": "LanRhyme",
+      "description": "番茄钟定时器（纯 WASM）：set_interval + notify，配置表单自动生成",
+      "descriptionI18n": {
+        "zh-CN": "专注计时器：工作时长与休息提醒"
+      },
+      "runtime": "wasm",
+      "kind": "utility",
+      "capabilities": [
+        "config.read",
+        "config.write"
+      ],
+      "license": "GPL-3.0-only",
+      "homepage": "https://github.com/LanRhyme/MicYou",
+      "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
+      "manifestUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.pomodoro/plugin.json",
+      "downloadUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.pomodoro/plugin.zip",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.pomodoro"
+    },
+    {
+      "id": "dev.micyou.example.soundpad",
+      "name": "Example Soundpad",
+      "nameI18n": {
+        "zh-CN": "音效板"
+      },
+      "version": "1.0.0",
+      "author": "MicYou",
+      "description": "示例音效板：按钮面板 + 专属设置页（postMessage 桥）+ 全局快捷键（Ctrl+Shift+S），音效经虚拟麦克风输出流播放",
+      "descriptionI18n": {},
+      "runtime": "native",
+      "kind": "utility",
+      "capabilities": [
+        "config.read",
+        "config.write",
+        "audio.play"
+      ],
+      "license": "GPL-3.0-only",
+      "homepage": "https://github.com/LanRhyme/MicYou",
+      "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
+      "manifestUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.soundpad/plugin.json",
+      "downloadUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.soundpad/plugin.zip",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.soundpad"
+    },
+    {
+      "id": "dev.micyou.example.voicechanger",
+      "name": "Example VoiceChanger",
+      "nameI18n": {
+        "zh-CN": "变声器"
+      },
+      "version": "1.0.0",
+      "author": "MicYou",
+      "description": "示例变声器 DSP 节点（WASM 运行时）：实时音高变换，证明 WASM 沙箱也能承担实时 DSP，带专属配置页面，处理链位置可拖拽调整",
+      "descriptionI18n": {},
+      "runtime": "wasm",
+      "kind": "dsp",
+      "capabilities": [
+        "dsp.node",
+        "config.read",
+        "config.write"
+      ],
+      "license": "GPL-3.0-only",
+      "homepage": "https://github.com/LanRhyme/MicYou",
+      "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
+      "manifestUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.voicechanger/plugin.json",
+      "downloadUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.voicechanger/plugin.zip",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.voicechanger"
+    }
+  ]
+}
