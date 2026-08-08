@@ -57,7 +57,7 @@ const catalog = {
     homepage: m.homepage ?? '',
     repository: m.repository ?? '',
     manifestUrl: `${base}/plugin/${m.id}/plugin.json`,
-    downloadUrl: `${base}/plugin/${m.id}/plugin.zip`,
+    downloadUrl: m.downloadUrl ?? `${base}/plugin/${m.id}/plugin.zip`,
     previewUrl: `${base}/plugin/${m.id}/preview.png`,
     pageUrl: `${gh}/plugin/${m.id}`,
     arches: m.arches ?? [],

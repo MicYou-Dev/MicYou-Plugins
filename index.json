@@ -1,7 +1,7 @@
 {
   "name": "MicYou Plugins",
   "description": "MicYou 插件市场目录（应用内「检查更新」与本页面均读取此清单）",
-  "updatedAt": "2026-08-08T07:03:30.075Z",
+  "updatedAt": "2026-08-08T07:03:56.134Z",
   "plugins": [
     {
       "id": "dev.micyou.example.audioinspector",
@@ -30,7 +30,7 @@
       "homepage": "https://github.com/MicYou-Dev/MicYou-Plugins",
       "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
       "manifestUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.json",
-      "downloadUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/plugin.zip",
+      "downloadUrl": "https://github.com/LanRhyme/MicYou/releases/latest/download/dev.micyou.example.audioinspector.zip",
       "previewUrl": "https://raw.githubusercontent.com/MicYou-Dev/MicYou-Plugins/main/plugin/dev.micyou.example.audioinspector/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector",
       "arches": [],

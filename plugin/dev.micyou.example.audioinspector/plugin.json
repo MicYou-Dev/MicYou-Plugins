@@ -47,5 +47,6 @@
     "audio",
     "monitor",
     "example"
-  ]
+  ],
+  "downloadUrl": "https://github.com/LanRhyme/MicYou/releases/latest/download/dev.micyou.example.audioinspector.zip"
 }
