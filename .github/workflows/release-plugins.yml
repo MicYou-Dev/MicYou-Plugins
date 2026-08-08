@@ -1,0 +1,54 @@
+name: Release Plugins
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag（默认 plugins-v1）'
+        required: false
+        default: 'plugins-v1'
+  push:
+    tags:
+      - 'plugins-*'
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install wabt
+        run: sudo apt-get update && sudo apt-get install -y wabt zip
+      - name: Package Plugins
+        run: |
+          TAG="${{ github.event.inputs.tag || 'plugins-v1' }}"
+          if [ -n "${{ github.ref_type }}" ] && [ "${{ github.ref_type }}" = "tag" ]; then
+            TAG="${GITHUB_REF_NAME}"
+          fi
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          for dir in plugin/*/; do
+            id=$(basename "$dir")
+            [ -f "$dir/plugin.json" ] || continue
+            # 编译 WAT -> WASM（若存在）
+            for wat in "$dir"/*.wat; do
+              [ -f "$wat" ] || continue
+              wat2wasm "$wat" -o "${wat%.wat}.wasm"
+            done
+            (cd "$dir" && zip -r -q "/tmp/$id.zip" . -x ".*")
+            echo "packed $id"
+          done
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.TAG }}
+          files: /tmp/*.zip
+          name: MicYou Plugins ${{ env.TAG }}
+          body: |
+            插件市场 Release（llqqnt 模式）
+            - zip 由 CI 自动打包（wat2wasm 编译 + 归档）
+            - index.json 的 downloadUrl 指向本 release 资产
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
