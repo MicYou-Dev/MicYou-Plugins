@@ -1,0 +1,75 @@
+{
+  "id": "dev.micyou.example.globalmute",
+  "name": "Global Mute",
+  "nameI18n": {
+    "zh": "全局静音",
+    "cat": "全局静音喵~"
+  },
+  "description": "WASM DSP plugin: one global hotkey to mute/unmute; implemented as a processing-chain node that zeroes the samples for a true global mute",
+  "descriptionI18n": {
+    "zh": "WASM 静音插件：注册全局快捷键一键静音/取消静音，通过把音频处理链样本清零实现全局静音",
+    "cat": "WASM 静音插件喵~：注册一个全局快捷键一键静音/取消静音，通过把音频处理链样本清零实现全局静音喵~"
+  },
+  "version": "1.0.0",
+  "author": "MicYou",
+  "license": "GPL-3.0-only",
+  "homepage": "https://github.com/MicYou-Dev/MicYou-Plugins",
+  "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
+  "runtime": "wasm",
+  "entry": "globalmute.wasm",
+  "platforms": [
+    "linux",
+    "windows",
+    "macos"
+  ],
+  "apiVersion": 1,
+  "kind": "dsp",
+  "capabilities": [
+    "dsp.node",
+    "config.read",
+    "config.write"
+  ],
+  "dsp": {
+    "first": true
+  },
+  "ui": {
+    "route": "plugin-panel",
+    "label": "全局静音",
+    "panels": [
+      {
+        "id": "mute",
+        "label": "静音控制",
+        "entry": "panel.html",
+        "sidebar": true
+      }
+    ]
+  },
+  "config": {
+    "muted": false,
+    "shortcut": "ctrl+shift+m"
+  },
+  "configSchema": {
+    "fields": [
+      {
+        "key": "muted",
+        "fieldType": "boolean",
+        "label": "静音",
+        "default": false
+      },
+      {
+        "key": "shortcut",
+        "fieldType": "string",
+        "label": "全局快捷键",
+        "default": "ctrl+shift+m"
+      }
+    ]
+  },
+  "keywords": [
+    "mute",
+    "hotkey",
+    "global",
+    "dsp",
+    "静音",
+    "快捷键"
+  ]
+}
