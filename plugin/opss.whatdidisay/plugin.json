@@ -1,0 +1,47 @@
+{
+  "id": "opss.whatdidisay",
+  "name": "WhatdidIsay",
+  "version": "0.2.5",
+  "description": "Transcribe your talk into text records every time you use MicYou.",
+  "license": "Unlicense",
+  "runtime": "native",
+  "entry": "WhatdidIsay",
+  "platforms": ["linux", "windows", "macos"],
+  "arches":["x86_64","aarch64"],
+  "minHostVersion":"2.0.3",
+  "updateUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/plugin.json",
+  "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip",
+  "apiVersion": 1,
+  "capabilities": [
+    "config.read", 
+    "config.write", 
+    "dsp.node", 
+    "message.send"
+  ],
+  "kind": "dsp",
+  "dsp": { "insertAfter": "AEC" },
+  "config": {
+    "loadTiming": "device_connect",
+    "notifyModelStatus": true
+  },
+  "configSchema": {
+    "fields": [
+      {
+        "key": "loadTiming",
+        "fieldType": "select",
+        "label": "模型加载时机",
+        "default": "device_connect",
+        "options": [
+          { "value": "micyou_start", "label": "MicYou 启动时" },
+          { "value": "device_connect", "label": "设备连接时" }
+        ]
+      },
+      {
+        "key": "notifyModelStatus",
+        "fieldType": "boolean",
+        "label": "模型状态通知",
+        "default": true
+      }
+    ]
+  }
+}
