@@ -26,6 +26,8 @@ MicYou 的插件市场仓库：插件目录与打包产物
 | 名称 | ID | 运行时 | 类型 | 版本 | 作者 | 能力 | 下载 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | [Example: Audio Inspector](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector) | `dev.micyou.example.audioinspector` | wasm | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | [zip](https://github.com/MicYou-Dev/MicYou-Plugins/releases/download/plugins-v1/dev.micyou.example.audioinspector.zip) |
+| [Global Mute](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.globalmute) | `dev.micyou.example.globalmute` | wasm | dsp | 1.0.0 | MicYou | dsp.node, config.read, config.write | [zip](https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.globalmute/plugin.zip) |
+| [WhatdidIsay](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay) | `opss.whatdidisay` | native | dsp | 0.2.5 |  | config.read, config.write, dsp.node, message.send | [zip](https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip) |
 
 ## 贡献插件
 
