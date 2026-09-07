@@ -34,41 +34,6 @@
       "platforms": []
     },
     {
-      "id": "dev.micyou.example.globalmute",
-      "name": "Global Mute",
-      "nameI18n": {
-        "zh": "全局静音",
-        "cat": "全局静音喵~"
-      },
-      "version": "1.0.0",
-      "author": "MicYou",
-      "description": "WASM DSP plugin: one global hotkey to mute/unmute; implemented as a processing-chain node that zeroes the samples for a true global mute",
-      "descriptionI18n": {
-        "zh": "WASM 静音插件：注册全局快捷键一键静音/取消静音，通过把音频处理链样本清零实现全局静音",
-        "cat": "WASM 静音插件喵~：注册一个全局快捷键一键静音/取消静音，通过把音频处理链样本清零实现全局静音喵~"
-      },
-      "runtime": "wasm",
-      "kind": "dsp",
-      "capabilities": [
-        "dsp.node",
-        "config.read",
-        "config.write"
-      ],
-      "license": "GPL-3.0-only",
-      "homepage": "https://github.com/MicYou-Dev/MicYou-Plugins",
-      "repository": "https://github.com/MicYou-Dev/MicYou-Plugins",
-      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.globalmute/plugin.json",
-      "downloadUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.globalmute/plugin.zip",
-      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.globalmute/preview.png",
-      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.globalmute",
-      "arches": [],
-      "platforms": [
-        "linux",
-        "windows",
-        "macos"
-      ]
-    },
-    {
       "id": "opss.voice-typing",
       "name": "Voice-Typing",
       "nameI18n": {},
