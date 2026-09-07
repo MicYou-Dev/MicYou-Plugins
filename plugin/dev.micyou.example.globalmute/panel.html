@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<title>Global Mute</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: hsl(var(--surface));
+    color: hsl(var(--on-surface));
+    padding: 20px; font-size: 14px;
+  }
+  .card {
+    background: hsl(var(--surface-bright));
+    border: 1px solid hsl(var(--border));
+    border-radius: 1rem; padding: 16px;
+  }
+  .card + .card { margin-top: 14px; }
+  .head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .head h2 { font-size: 18px; font-weight: 700; color: hsl(var(--primary)); }
+  .status {
+    display: flex; align-items: center; gap: 10px; padding: 14px;
+    border-radius: 0.9rem; font-weight: 700; font-size: 15px;
+    background: hsl(var(--primary-container)); color: hsl(var(--on-primary-container));
+  }
+  .status.muted { background: hsl(var(--error-container)); color: hsl(var(--on-error-container)); }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: hsl(var(--tertiary)); flex: none; }
+  .status.muted .dot { background: hsl(var(--error)); }
+  .row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid hsl(var(--border)); font-size: 13px; }
+  .row:last-child { border-bottom: none; }
+  .lbl { color: hsl(var(--on-surface-variant)); }
+  .val { font-weight: 600; }
+  /* 快捷键录制（参考 MC 按键绑定：单击录入，Esc 取消，可重置默认） */
+  .hotkey-box { display: flex; align-items: center; gap: 8px; }
+  .recorder {
+    font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+    min-width: 150px; text-align: center;
+    background: hsl(var(--surface-container-high)); border: 1px solid hsl(var(--outline-variant));
+    border-radius: 8px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+    color: hsl(var(--on-surface)); transition: all 0.15s ease;
+  }
+  .recorder:hover { border-color: hsl(var(--primary)); }
+  .recorder.recording {
+    border-color: hsl(var(--primary)); background: hsl(var(--primary-container));
+    color: hsl(var(--on-primary-container)); font-weight: 600;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.55; } }
+  .btn {
+    border: 1px solid hsl(var(--outline-variant)); border-radius: 8px; padding: 6px 12px;
+    font-size: 12px; font-weight: 600; cursor: pointer;
+    background: hsl(var(--surface-container-high)); color: hsl(var(--on-surface));
+    transition: filter 0.15s ease;
+  }
+  .btn:active { filter: brightness(.9); }
+  .btn.primary { background: hsl(var(--primary)); color: hsl(var(--on-primary)); border: none; }
+  .btn.danger { background: hsl(var(--error)); color: hsl(var(--on-error)); border: none; }
+  .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+  .btn.wide { grid-column: 1 / -1; }
+  .hint { margin-top: 12px; font-size: 11px; line-height: 1.6; color: hsl(var(--on-surface-variant)); }
+  #err { color: hsl(var(--error)); font-size: 12px; margin-top: 10px; }
+</style>
+</head>
+<body>
+  <div class="head">
+    <h2 id="title">全局静音</h2>
+  </div>
+
+  <div class="card">
+    <div class="status" id="status">
+      <span class="dot"></span>
+      <span id="statusText">—</span>
+    </div>
+    <div class="btns">
+      <button class="btn danger" id="btnMute">🔇 静音</button>
+      <button class="btn primary" id="btnUnmute">🔊 取消静音</button>
+      <button class="btn wide" id="btnToggle">⇄ 切换</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <span class="lbl" id="lblHotkey">全局快捷键</span>
+      <span class="hotkey-box">
+        <button class="recorder" id="recorder" title="click">Ctrl + Shift + M</button>
+        <button class="btn" id="resetHotkey">↺ 重置</button>
+      </span>
+    </div>
+    <div class="hint" id="hint"></div>
+  </div>
+
+  <div id="err"></div>
+
+<script>
+function call(api, args) {
+  return new Promise((resolve, reject) => {
+    const id = Math.random().toString(36).slice(2);
+    const on = (e) => {
+      if (e.data && e.data.__micyou === 1 && e.data.id === id) {
+        window.removeEventListener('message', on);
+        e.data.ok ? resolve(e.data.value) : reject(new Error(e.data.error));
+      }
+    };
+    window.addEventListener('message', on);
+    window.parent.postMessage({ __micyou: 1, id, api, args: args || {} }, '*');
+  });
+}
+
+const DEFAULT_SHORTCUT = 'ctrl+shift+m';
+
+const T = {
+  'zh-CN': {
+    title: '全局静音', live: '正在收音（未静音）', muted: '已静音（全局静音中）',
+    hotkey: '全局快捷键', btnMute: '🔇 静音', btnUnmute: '🔊 取消静音', btnToggle: '⇄ 切换',
+    recording: '按下组合键…（Esc 取消）', reset: '↺ 重置',
+    hint: '点击右侧快捷键框可重新录入（支持 Ctrl/Alt/Shift/Super + 字母、数字、F1-F12 等，Esc 取消），录入后立即生效。重置按钮恢复默认。提示：Linux Wayland 会话不支持全局快捷键（合成器不转发 X11 全局抓取），请改用面板按钮。',
+    unknown: '未知',
+  },
+  en: {
+    title: 'Global Mute', live: 'Live (not muted)', muted: 'Muted (global mute on)',
+    hotkey: 'Global hotkey', btnMute: '🔇 Mute', btnUnmute: '🔊 Unmute', btnToggle: '⇄ Toggle',
+    recording: 'Press keys… (Esc to cancel)', reset: '↺ Reset',
+    hint: 'Click the shortcut box to record a new one (Ctrl/Alt/Shift/Super + letter, digit, F1-F12…, Esc to cancel); it takes effect immediately. Reset restores the default. Note: on Linux Wayland sessions global hotkeys are unsupported, use the panel buttons instead.',
+    unknown: 'unknown',
+  },
+  cat: {
+    title: '全局静音喵~', live: '正在收音喵（没有静音）', muted: '已经静音喵（全局静音中）',
+    hotkey: '全局快捷键喵~', btnMute: '🔇 静音喵', btnUnmute: '🔊 取消静音喵~', btnToggle: '⇄ 切换喵',
+    recording: '按组合键喵…（按 Esc 取消喵）', reset: '↺ 重置喵',
+    hint: '点右边那个快捷键框就能重新录喵~（支持 Ctrl/Alt/Shift/Super + 字母、数字、F1-F12 等等，按 Esc 取消喵），录完立刻生效喵！重置按钮可以恢复默认喵~ 提示：Linux Wayland 会话不支持全局快捷键喵（合成器不转发 X11 全局抓取），请改用面板按钮喵~',
+    unknown: '不知道喵',
+  },
+};
+let t = T.en;
+call('locale').catch(() => 'en').then((lang) => {
+  lang = String(lang);
+  t = T[lang] || (lang.startsWith('zh') ? T['zh-CN'] : T.en);
+  document.getElementById('title').textContent = t.title;
+  document.getElementById('lblHotkey').textContent = t.hotkey;
+  document.getElementById('btnMute').textContent = t.btnMute;
+  document.getElementById('btnUnmute').textContent = t.btnUnmute;
+  document.getElementById('btnToggle').textContent = t.btnToggle;
+  document.getElementById('resetHotkey').textContent = t.reset;
+  document.getElementById('hint').textContent = t.hint;
+});
+
+// ---- 快捷键显示 / 录制（参考 MC 按键绑定交互）----
+const recorder = document.getElementById('recorder');
+const resetHotkey = document.getElementById('resetHotkey');
+let recording = false;
+let currentShortcut = DEFAULT_SHORTCUT;
+
+function formatShortcut(s) {
+  // "ctrl+shift+m" -> "Ctrl + Shift + M"
+  return String(s || '')
+    .split('+')
+    .filter(Boolean)
+    .map((p) => p[0].toUpperCase() + p.slice(1))
+    .join(' + ');
+}
+
+function startRecording() {
+  if (recording) return;
+  recording = true;
+  recorder.classList.add('recording');
+  recorder.textContent = t.recording;
+  recorder.focus();
+}
+function stopRecording(restore) {
+  recording = false;
+  recorder.classList.remove('recording');
+  if (restore) recorder.textContent = formatShortcut(currentShortcut);
+}
+
+// 把一次 keydown 事件转成宿主接受的快捷键串（"ctrl+shift+m"），
+// 仅修饰键 / 未知键返回 null（继续等待主键）
+function keyToShortcut(e) {
+  const mods = [];
+  if (e.ctrlKey) mods.push('ctrl');
+  if (e.altKey) mods.push('alt');
+  if (e.shiftKey) mods.push('shift');
+  if (e.metaKey) mods.push('super');
+  let key = null;
+  if (/^[a-z0-9]$/i.test(e.key)) key = e.key.toLowerCase();
+  else if (/^f([1-9]|1[0-2])$/i.test(e.key)) key = e.key.toLowerCase();
+  else if (e.code === 'Space') key = 'space';
+  else if (e.key === 'Enter') key = 'enter';
+  else if (e.key === 'Tab') key = 'tab';
+  else if (e.key === 'Backspace') key = 'backspace';
+  else if (e.key.startsWith('Arrow')) key = e.key.slice(5).toLowerCase(); // up/down/left/right
+  if (!key) return null; // 单独修饰键等，继续等待
+  mods.push(key);
+  return mods.join('+');
+}
+
+recorder.addEventListener('click', startRecording);
+
+window.addEventListener('keydown', (e) => {
+  if (!recording) return;
+  e.preventDefault();
+  e.stopPropagation();
+  if (e.key === 'Escape') { stopRecording(true); return; }
+  const s = keyToShortcut(e);
+  if (!s) return; // 等待主键
+  stopRecording(false);
+  currentShortcut = s;
+  recorder.textContent = formatShortcut(s);
+  call('set_config', { key: 'shortcut', value: s })
+    .then(() => (document.getElementById('err').textContent = ''))
+    .catch((err) => (document.getElementById('err').textContent = String(err)));
+});
+
+resetHotkey.addEventListener('click', () => {
+  stopRecording(true);
+  currentShortcut = DEFAULT_SHORTCUT;
+  recorder.textContent = formatShortcut(DEFAULT_SHORTCUT);
+  call('set_config', { key: 'shortcut', value: DEFAULT_SHORTCUT })
+    .then(() => (document.getElementById('err').textContent = ''))
+    .catch((err) => (document.getElementById('err').textContent = String(err)));
+});
+
+// ---- 静音状态 ----
+function render(cfg) {
+  const muted = !!(cfg && cfg.muted);
+  const st = document.getElementById('status');
+  st.classList.toggle('muted', muted);
+  document.getElementById('statusText').textContent = muted ? t.muted : t.live;
+  if (cfg && cfg.shortcut && !recording) {
+    currentShortcut = String(cfg.shortcut);
+    recorder.textContent = formatShortcut(currentShortcut);
+  }
+}
+
+async function load() {
+  try {
+    const cfg = await call('get_config', {});
+    render(cfg);
+  } catch (e) {
+    document.getElementById('err').textContent = String(e);
+  }
+}
+
+function trigger(action) {
+  call('trigger', { action }).catch((e) => (document.getElementById('err').textContent = String(e)));
+  setTimeout(load, 250); // 乐观更新 UI，随后由轮询校准
+}
+
+document.getElementById('btnMute').addEventListener('click', () => trigger('mute'));
+document.getElementById('btnUnmute').addEventListener('click', () => trigger('unmute'));
+document.getElementById('btnToggle').addEventListener('click', () => trigger('toggle'));
+
+load();
+setInterval(load, 1500); // 轮询：快捷键触发时同步显示
+</script>
+</body>
+</html>
