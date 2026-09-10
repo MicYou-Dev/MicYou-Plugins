@@ -28,15 +28,23 @@ interface Manifest {
   descriptionI18n?: Record<string, string>;
   arches?: string[];
   platforms?: string[];
+  downloadUrl?: string;
+  readmeUrl?: string;
 }
 
-const entries: Manifest[] = [];
+interface Entry extends Manifest {
+  hasReadme: boolean;
+}
+
+const entries: Entry[] = [];
 for (const dir of readdirSync(pluginDir).sort()) {
   const p = join(pluginDir, dir, 'plugin.json');
   if (!existsSync(p)) continue;
   const m = JSON.parse(readFileSync(p, 'utf8')) as Manifest;
   if (!m.id) continue;
-  entries.push(m);
+  const readmePath = join(pluginDir, dir, 'README.md');
+  const hasReadme = existsSync(readmePath);
+  entries.push({ ...m, hasReadme });
 }
 
 const catalog = {
@@ -62,6 +70,7 @@ const catalog = {
     downloadUrl: m.downloadUrl ?? `${base}/plugin/${m.id}/plugin.zip`,
     previewUrl: `${base}/plugin/${m.id}/preview.png`,
     pageUrl: `${gh}/plugin/${m.id}`,
+    readmeUrl: m.readmeUrl ?? (m.hasReadme ? `${base}/plugin/${m.id}/README.md` : undefined),
     arches: m.arches ?? [],
     platforms: m.platforms ?? [],
   })),
@@ -72,7 +81,7 @@ writeFileSync(join(root, 'index.json'), JSON.stringify(catalog, null, 2) + '\n')
 const rows = catalog.plugins
   .map(
     (p) =>
-      `| [${p.name}](${p.pageUrl}) | \`${p.id}\` | ${p.runtime} | ${p.kind} | ${p.version} | ${p.author} | ${p.capabilities.length ? p.capabilities.join(', ') : '—'} | [zip](${p.downloadUrl}) |`,
+      `| ${p.name} | \`${p.id}\` | ${p.runtime} | ${p.kind} | ${p.version} | ${p.author} | ${p.capabilities.length ? p.capabilities.join(', ') : '—'} | zip |`,
   )
   .join('\n');
 
@@ -107,7 +116,7 @@ ${rows}
 
 ## 贡献插件
 
-想要发布插件，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)
+想要发布插件，请阅读 CONTRIBUTING.md
 
 ## 生成
 
