@@ -34,6 +34,34 @@
       "platforms": []
     },
     {
+      "id": "opss.mambo-rvc-onnx",
+      "name": "Mambo RVC ONNX",
+      "nameI18n": {},
+      "version": "1.0.0",
+      "author": "",
+      "description": "曼波RVC变声器",
+      "descriptionI18n": {},
+      "runtime": "native",
+      "kind": "dsp",
+      "capabilities": [
+        "dsp.node",
+        "config.read"
+      ],
+      "license": "Unlicense",
+      "homepage": "",
+      "repository": "",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/plugin.json",
+      "downloadUrl": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/download/v1.0.0/opss.mambo-rvc-onnx.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx",
+      "arches": [
+        "x86_64"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
       "id": "opss.voice-typing",
       "name": "Voice-Typing",
       "nameI18n": {},
