@@ -30,6 +30,7 @@
       "downloadUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/releases/download/plugins-v1/dev.micyou.example.audioinspector.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.audioinspector/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector",
+      "readmeUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.micyou.example.audioinspector/README.md",
       "arches": [],
       "platforms": []
     },
@@ -54,6 +55,7 @@
       "downloadUrl": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/download/v1.0.0/opss.mambo-rvc-onnx.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Mambo-RVC-ONNX/refs/heads/main/README.md",
       "arches": [
         "x86_64"
       ],
@@ -82,6 +84,7 @@
       "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/download/v0.1.0/opss.voice-typing.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.voice-typing",
+      "readmeUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/README.md",
       "arches": [
         "x86_64"
       ],
@@ -112,6 +115,7 @@
       "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay",
+      "readmeUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/README.md",
       "arches": [
         "x86_64",
         "aarch64"

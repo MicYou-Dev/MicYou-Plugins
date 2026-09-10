@@ -25,14 +25,14 @@ MicYou 的插件市场仓库：插件目录与打包产物
 
 | 名称 | ID | 运行时 | 类型 | 版本 | 作者 | 能力 | 下载 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [Example: Audio Inspector](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.micyou.example.audioinspector) | `dev.micyou.example.audioinspector` | wasm | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | [zip](https://github.com/MicYou-Dev/MicYou-Plugins/releases/download/plugins-v1/dev.micyou.example.audioinspector.zip) |
-| [Mambo RVC ONNX](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx) | `opss.mambo-rvc-onnx` | native | dsp | 1.0.0 |  | dsp.node, config.read | [zip](https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/download/v1.0.0/opss.mambo-rvc-onnx.zip) |
-| [Voice-Typing](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.voice-typing) | `opss.voice-typing` | native | utility | 0.1.0 |  | config.read, config.write | [zip](https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/download/v0.1.0/opss.voice-typing.zip) |
-| [WhatdidIsay](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay) | `opss.whatdidisay` | native | dsp | 0.2.5 |  | config.read, config.write, dsp.node, message.send | [zip](https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip) |
+| Example: Audio Inspector | `dev.micyou.example.audioinspector` | wasm | utility | 1.0.0 | MicYou | config.read, config.write, audio.state, device.list | zip |
+| Mambo RVC ONNX | `opss.mambo-rvc-onnx` | native | dsp | 1.0.0 |  | dsp.node, config.read | zip |
+| Voice-Typing | `opss.voice-typing` | native | utility | 0.1.0 |  | config.read, config.write | zip |
+| WhatdidIsay | `opss.whatdidisay` | native | dsp | 0.2.5 |  | config.read, config.write, dsp.node, message.send | zip |
 
 ## 贡献插件
 
-想要发布插件，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)
+想要发布插件，请阅读 CONTRIBUTING.md
 
 ## 生成
 
