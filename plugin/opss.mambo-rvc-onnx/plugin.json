@@ -3,7 +3,7 @@
   "name": "Mambo RVC ONNX",
   "version": "1.0.0",
   "runtime": "native",
-  "description": "曼波RVC变声器",
+  "description": "曼波RVC变声器 请务必查看README下载CUDA运行库",
   "license": "Unlicense",
   "platforms": ["windows"],
   "arches":["x86_64"],
