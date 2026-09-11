@@ -40,7 +40,7 @@
       "nameI18n": {},
       "version": "1.0.0",
       "author": "",
-      "description": "曼波RVC变声器",
+      "description": "曼波RVC变声器 请务必查看README下载CUDA运行库",
       "descriptionI18n": {},
       "runtime": "native",
       "kind": "dsp",
@@ -49,7 +49,7 @@
         "config.read"
       ],
       "license": "Unlicense",
-      "homepage": "",
+      "homepage": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX",
       "repository": "",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/plugin.json",
       "downloadUrl": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/download/v1.0.0/opss.mambo-rvc-onnx.zip",
@@ -78,7 +78,7 @@
         "config.write"
       ],
       "license": "Unlicense",
-      "homepage": "",
+      "homepage": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing",
       "repository": "",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/plugin.json",
       "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/download/v0.1.0/opss.voice-typing.zip",
@@ -109,7 +109,7 @@
         "message.send"
       ],
       "license": "Unlicense",
-      "homepage": "",
+      "homepage": "https://github.com/OrientCOMPASS/WhatdidIsay",
       "repository": "",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/plugin.json",
       "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip",
