@@ -81,7 +81,7 @@ writeFileSync(join(root, 'index.json'), JSON.stringify(catalog, null, 2) + '\n')
 const rows = catalog.plugins
   .map(
     (p) =>
-      `| ${p.name} | \`${p.id}\` | ${p.runtime} | ${p.kind} | ${p.version} | ${p.author} | ${p.capabilities.length ? p.capabilities.join(', ') : '—'} | zip |`,
+      `| [${p.name}](${p.pageUrl}) | [\`${p.id}\`](${p.pageUrl}) | ${p.runtime} | ${p.kind} | ${p.version} | ${p.author} | ${p.capabilities.length ? p.capabilities.join(', ') : '—'} | [zip](${p.downloadUrl}) |`,
   )
   .join('\n');
 
@@ -116,7 +116,7 @@ ${rows}
 
 ## 贡献插件
 
-想要发布插件，请阅读 CONTRIBUTING.md
+想要发布插件，请阅读 [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## 生成
 

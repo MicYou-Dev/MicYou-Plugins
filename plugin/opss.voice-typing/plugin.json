@@ -10,6 +10,7 @@
   "entry": "micyou_voice_typing",
   "updateUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/plugin.json",
   "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/download/v0.1.0/opss.voice-typing.zip",
+  "homepage": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing",
   "apiVersion": 1,
   "dependencies": [
   { "id": "opss.whatdidisay", "version": "^0.2.5", "optional": false }

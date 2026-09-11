@@ -11,6 +11,7 @@
   "minHostVersion":"2.0.3",
   "updateUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/plugin.json",
   "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip",
+  "homepage": "https://github.com/OrientCOMPASS/WhatdidIsay",
   "apiVersion": 1,
   "capabilities": [
     "config.read", 
