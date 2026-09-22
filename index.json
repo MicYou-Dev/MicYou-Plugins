@@ -35,13 +35,58 @@
       "platforms": []
     },
     {
+      "id": "opss.focus-capture",
+      "name": "FocusCapture",
+      "nameI18n": {
+        "zh": "焦点声音捕获",
+        "zh-CN": "焦点声音捕获"
+      },
+      "version": "1.0.0",
+      "author": "",
+      "description": "Hotkey-toggled capture of the focused application's audio output, mixed into the MicYou mic stream so call peers hear it. Press the hotkey again anywhere to stop.",
+      "descriptionI18n": {
+        "zh": "快捷键一键捕获当前焦点应用的声音，混入 MicYou 麦克风流让对方听到；在任意应用中再按同一快捷键即停止。",
+        "zh-CN": "快捷键一键捕获当前焦点应用的声音，混入 MicYou 麦克风流让对方听到；在任意应用中再按同一快捷键即停止。"
+      },
+      "runtime": "native",
+      "kind": "dsp",
+      "capabilities": [
+        "dsp.node",
+        "config.read",
+        "config.write"
+      ],
+      "license": "Unlicense",
+      "homepage": "https://github.com/OrientCOMPASS/Focus-Capture",
+      "repository": "https://github.com/OrientCOMPASS/Focus-Capture",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.focus-capture/plugin.json",
+      "downloadUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.focus-capture/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.focus-capture/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.focus-capture",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Focus-Capture/refs/heads/main/README.md",
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ]
+    },
+    {
       "id": "opss.mambo-rvc-onnx",
       "name": "Mambo RVC ONNX",
-      "nameI18n": {},
+      "nameI18n": {
+        "zh": "曼波RVC变声器",
+        "zh-CN": "曼波RVC变声器"
+      },
       "version": "1.1.0",
       "author": "",
-      "description": "曼波RVC变声器：本地实时流式 AI 变声，支持加载你自己的 RVC 模型",
-      "descriptionI18n": {},
+      "description": "Mambo RVC voice changer: local real-time streaming AI voice conversion (check README to download CUDA dlls), with support for loading your own RVC models.",
+      "descriptionI18n": {
+        "zh": "曼波RVC变声器：本地实时流式 AI 变声，支持加载你自己的 RVC 模型。阅读README下载CUDA运行库。",
+        "zh-CN": "曼波RVC变声器：本地实时流式 AI 变声，支持加载你自己的 RVC 模型。阅读README下载CUDA运行库。"
+      },
       "runtime": "native",
       "kind": "dsp",
       "capabilities": [
@@ -50,9 +95,9 @@
       ],
       "license": "Unlicense",
       "homepage": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX",
-      "repository": "",
+      "repository": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/plugin.json",
-      "downloadUrl": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/download/v1.1.0/opss.mambo-rvc-onnx.zip",
+      "downloadUrl": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/latest/download/opss.mambo-rvc-onnx.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.mambo-rvc-onnx/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx",
       "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Mambo-RVC-ONNX/refs/heads/main/README.md",
@@ -66,11 +111,17 @@
     {
       "id": "opss.voice-typing",
       "name": "Voice-Typing",
-      "nameI18n": {},
-      "version": "0.1.0",
+      "nameI18n": {
+        "zh": "语音输入法",
+        "zh-CN": "语音输入法"
+      },
+      "version": "0.1.1",
       "author": "",
-      "description": "Windows端的语音输入法，依赖WhatdidIsay",
-      "descriptionI18n": {},
+      "description": "Voice typing for Windows, dependent on WhatdidIsay.",
+      "descriptionI18n": {
+        "zh": "Windows端的语音输入法，依赖WhatdidIsay实时语音转录。",
+        "zh-CN": "Windows端的语音输入法，依赖WhatdidIsay实时语音转录。"
+      },
       "runtime": "native",
       "kind": "utility",
       "capabilities": [
@@ -79,12 +130,12 @@
       ],
       "license": "Unlicense",
       "homepage": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing",
-      "repository": "",
+      "repository": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/plugin.json",
-      "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/download/v0.1.0/opss.voice-typing.zip",
+      "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/latest/download/opss.voice-typing.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.voice-typing",
-      "readmeUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.voice-typing/README.md",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/MicYou-Voice-Typing/refs/heads/main/README.md",
       "arches": [
         "x86_64"
       ],
@@ -95,11 +146,17 @@
     {
       "id": "opss.whatdidisay",
       "name": "WhatdidIsay",
-      "nameI18n": {},
+      "nameI18n": {
+        "zh": "实时语音转录",
+        "zh-CN": "实时语音转录"
+      },
       "version": "0.2.5",
       "author": "",
-      "description": "Transcribe your talk into text records every time you use MicYou.",
-      "descriptionI18n": {},
+      "description": "Transcribe your talk into text records every time you use MicYou. ",
+      "descriptionI18n": {
+        "zh": "在后台把你说的话实时转录成文字记录。",
+        "zh-CN": "在后台把你说的话实时转录成文字记录。"
+      },
       "runtime": "native",
       "kind": "dsp",
       "capabilities": [
@@ -110,12 +167,12 @@
       ],
       "license": "Unlicense",
       "homepage": "https://github.com/OrientCOMPASS/WhatdidIsay",
-      "repository": "",
+      "repository": "https://github.com/OrientCOMPASS/WhatdidIsay",
       "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/plugin.json",
-      "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/download/v0.2.5/opss.whatdidisay.zip",
+      "downloadUrl": "https://github.com/OrientCOMPASS/WhatdidIsay/releases/latest/download/opss.whatdidisay.zip",
       "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/preview.png",
       "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay",
-      "readmeUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.whatdidisay/README.md",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/WhatdidIsay/refs/heads/main/README.md",
       "arches": [
         "x86_64",
         "aarch64"
