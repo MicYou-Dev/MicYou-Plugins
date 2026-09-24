@@ -1,0 +1,226 @@
+// cfw-bundled: 3   (built-in theme revision; remove this line to freeze your own edits)
+// pill.slint — 信息条主题：电平条 + 状态点 + 连接时长 + 快捷按钮
+//
+// 演示另一种交互组合：
+//   · WindowMoveArea（Slint 1.18）系统级拖动整条窗口
+//   · 按钮点击：静音 / 耳返
+//   · 右键：原生上下文菜单（ContextMenuArea）
+// 数据契约同 ring.slint（全部可选）。
+
+export component FloatingPill inherits Window {
+    // ── 数据输入 ──
+    in property <float> input-level: 0;
+    in property <float> processed-level: 0;
+    in property <float> smooth-level: 0;
+    in property <int> level-percent: 0;
+    in property <bool> muted: false;
+    in property <bool> streaming: false;
+    in property <bool> monitoring: false;
+    in property <int> sample-rate: 0;
+    in property <int> channels: 0;
+    in property <float> queued-ms: 0;
+    in property <int> session-seconds: 0;
+    in property <string> session-text: "00:00";
+    in property <string> device-label: "";
+    in property <string> device-mode: "";
+    in property <string> info-text: "";        // "48.0kHz · 1ch · q13ms"（helper 预格式化）
+    in property <string> arc-path: "";
+    in property <string> wdis-text: "";        // WDIS 语音转录文本
+    in property <bool> wdis-visible: false;    // WDIS 展示开关（helper 定时收回）
+
+    // ── 交互输出 ──
+    callback mute-toggle();
+    callback monitoring-toggle();
+    callback menu-action(string);
+    callback hide-window();
+    callback drag-start();
+    callback drag-move(float, float);
+    callback drag-end();
+
+    // ── 外观 ──
+    in property <color> accent: #4ea1ff;
+    in property <color> error: #ff5a5a;
+    in property <color> ok: #3ddc84;
+    in property <color> idle: #9aa0a6;
+    in property <color> panel: #16181de6;      // 半透明深色底
+
+    // 窗口高度随 WDIS 下伸面板生长（顶边锚定不动）
+    width: 224px; height: 56px + box-h;
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "MicYou";
+    default-font-size: 11px;
+
+    property <color> content: muted ? error : (streaming ? accent : idle);
+    property <color> dot: muted ? error : (streaming ? ok : idle);
+    property <float> lvl: min(1, max(0, smooth-level));
+    property <float> pulse: 1;
+    property <bool> blink: true;
+    // WDIS 展示区高度 = 文本实际需要高度 + 分隔与内边距（伸出/收回动画）
+    property <length> box-h: wdis-visible ? (wtxt.preferred-height + 18px) : 0px;
+    animate box-h { duration: 240ms; easing: ease; }
+
+    Timer {
+        interval: 900ms;
+        running: root.streaming && !root.muted;
+        triggered => { root.blink = !root.blink; }
+    }
+
+    ContextMenuArea {
+        Menu {
+            MenuItem {
+                title: root.muted ? "取消静音" : "静音";
+                activated => { root.mute-toggle(); }
+            }
+            MenuItem {
+                title: root.monitoring ? "关闭耳返" : "开启耳返";
+                activated => { root.monitoring-toggle(); }
+            }
+            MenuSeparator {}
+            MenuItem {
+                title: "隐藏悬浮窗";
+                activated => { root.hide-window(); }
+            }
+            MenuItem {
+                title: "重新加载主题";
+                activated => { root.menu-action("reload-theme"); }
+            }
+        }
+
+        // 卡片底
+        Rectangle {
+            width: 100%; height: 100%;
+            border-radius: 16px;
+            background: root.panel;
+            border-width: 1px;
+            border-color: #ffffff1c;
+        }
+
+        // 系统级拖动区（内容元素不拦截左键处均可拖动）
+        WindowMoveArea { width: 100%; height: 100%; }
+
+        // ── WDIS 转录区：卡片内下方，分隔线 + 内边距，高度随文本自适应 ──
+        Rectangle {
+            x: 12px; y: 56px;
+            width: parent.width - 24px; height: 1px;
+            background: #ffffff2e;
+            opacity: root.wdis-visible ? 1 : 0;
+        }
+        wtxt := Text {
+            x: 12px; y: 61px;
+            width: parent.width - 24px;
+            text: root.wdis-text;
+            color: #e8eaed;
+            font-size: 11px;
+            wrap: word-wrap;
+            opacity: root.wdis-visible ? 1 : 0;
+        }
+
+        HorizontalLayout {
+            // 主栏固定 56px 高：窗口因 WDIS 区生长时布局不随之铺满
+            x: 0px; y: 0px;
+            width: parent.width; height: 56px;
+            padding-left: 12px; padding-right: 8px;
+            spacing: 10px;
+            alignment: stretch;
+
+            // 状态点（串流时呼吸闪烁）
+            Rectangle {
+                width: 26px;
+                VerticalLayout {
+                    alignment: center;
+                    Rectangle {
+                        property <length> d: 10px;
+                        width: d; height: d;
+                        border-radius: d / 2;
+                        background: root.dot;
+                        opacity: root.streaming && !root.muted ? (root.blink ? 1 : 0.45) : 1;
+                        horizontal-stretch: 0;
+                    }
+                }
+            }
+
+            // 中部：电平条 + 文本
+            VerticalLayout {
+                alignment: center;
+                spacing: 5px;
+                horizontal-stretch: 1;
+
+                // 电平条
+                Rectangle {
+                    height: 6px;
+                    border-radius: 3px;
+                    background: #ffffff24;
+                    clip: true;
+                    Rectangle {
+                        height: 100%;
+                        width: parent.width * root.lvl;
+                        border-radius: 3px;
+                        background: root.content;
+                        animate width { duration: 90ms; easing: linear; }
+                    }
+                }
+
+                HorizontalLayout {
+                    spacing: 6px;
+                    Text {
+                        text: root.session-text;
+                        color: #e8eaed;
+                        font-weight: 600;
+                        vertical-alignment: center;
+                    }
+                    Text {
+                        text: root.streaming
+                            ? (root.device-label != "" ? root.device-label : root.info-text)
+                            : "未连接";
+                        color: #9aa0a6;
+                        overflow: elide;
+                        vertical-alignment: center;
+                        horizontal-stretch: 1;
+                    }
+                }
+            }
+
+            // 静音按钮
+            btn-mute := TouchArea {
+                width: 40px;
+                mouse-cursor: pointer;
+                clicked => { root.mute-toggle(); }
+                Rectangle {
+                    width: 100%; height: 36px;
+                    y: (parent.height - self.height) / 2;
+                    border-radius: 10px;
+                    background: root.muted ? root.error : (btn-mute.pressed ? #ffffff2e : #ffffff17);
+                    Text {
+                        width: 100%; height: 100%;
+                        horizontal-alignment: center; vertical-alignment: center;
+                        text: root.muted ? "OFF" : "MIC";
+                        color: root.muted ? #16181d : #e8eaed;
+                        font-weight: 700;
+                    }
+                }
+            }
+
+            // 耳返按钮
+            btn-mon := TouchArea {
+                width: 40px;
+                mouse-cursor: pointer;
+                clicked => { root.monitoring-toggle(); }
+                Rectangle {
+                    width: 100%; height: 36px;
+                    y: (parent.height - self.height) / 2;
+                    border-radius: 10px;
+                    background: root.monitoring ? root.ok : (btn-mon.pressed ? #ffffff2e : #ffffff17);
+                    Text {
+                        width: 100%; height: 100%;
+                        horizontal-alignment: center; vertical-alignment: center;
+                        text: "MON";
+                        color: root.monitoring ? #16181d : #e8eaed;
+                        font-weight: 700;
+                    }
+                }
+            }
+        }
+    }
+}

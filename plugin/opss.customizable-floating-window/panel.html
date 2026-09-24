@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>悬浮窗设置 · Customizable Floating Window</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 18px 20px 32px;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    color: hsl(var(--on-surface));
+    background: transparent;
+    font-size: 14px; line-height: 1.55;
+  }
+  h2 { margin: 0 0 2px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .sub { color: hsl(var(--on-surface-variant)); font-size: 12px; margin-bottom: 16px; }
+  .card {
+    border: 1px solid hsl(var(--border));
+    background: hsl(var(--surface-container));
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 10px; font-size: 14px; }
+  .row { display: flex; align-items: center; gap: 10px; margin: 8px 0; flex-wrap: wrap; }
+  .row label { flex: none; min-width: 76px; color: hsl(var(--on-surface-variant)); }
+  .row > .hint { flex-basis: 100%; min-width: 0; margin: 2px 0 0; }
+  .actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 0; }
+  .hint { min-width: 0; overflow-wrap: anywhere; }
+  code { overflow-wrap: anywhere; }
+  pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+  .pathbox { margin-top: 8px; font-size: 12px; color: hsl(var(--on-surface-variant)); overflow-wrap: anywhere; }
+  .ai-tip {
+    border: 1px dashed hsl(var(--primary)); border-radius: 12px;
+    padding: 10px 12px; font-size: 12.5px; background: hsl(var(--primary) / .06);
+    margin: 10px 0 0;
+  }
+  .ai-tip b { color: hsl(var(--primary)); }
+  button {
+    border: 1px solid hsl(var(--outline)); background: hsl(var(--surface-bright));
+    color: hsl(var(--on-surface)); padding: 7px 14px; border-radius: 999px;
+    font-size: 13px; cursor: pointer; white-space: nowrap;
+  }
+  button.primary { background: hsl(var(--primary)); color: hsl(var(--on-primary)); border-color: transparent; }
+  button.danger { background: hsl(var(--error)); color: hsl(var(--on-error)); border-color: transparent; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  .badge {
+    font-size: 11px; padding: 2px 9px; border-radius: 999px;
+    border: 1px solid hsl(var(--outline)); color: hsl(var(--on-surface-variant));
+  }
+  .badge.ok { color: hsl(var(--primary)); border-color: hsl(var(--primary)); }
+  .badge.err { color: hsl(var(--error)); border-color: hsl(var(--error)); }
+  .kv { display: grid; grid-template-columns: auto 1fr; gap: 2px 14px; font-size: 13px; }
+  .kv .k { color: hsl(var(--on-surface-variant)); }
+  .kv .v { font-variant-numeric: tabular-nums; }
+  .errbox {
+    display: none; margin-top: 10px; padding: 8px 12px; border-radius: 10px;
+    background: hsl(var(--error) / .1); color: hsl(var(--error)); font-size: 12.5px;
+    white-space: pre-wrap; font-family: ui-monospace, Consolas, monospace;
+  }
+  .themes { display: flex; flex-direction: column; gap: 4px; max-height: 170px; overflow: auto; }
+  .themes label {
+    display: flex; align-items: center; gap: 8px; padding: 5px 8px; border-radius: 8px; cursor: pointer;
+  }
+  .themes label:hover { background: hsl(var(--surface-variant) / .5); }
+  .themes input { accent-color: hsl(var(--primary)); }
+  .themes .cur { color: hsl(var(--on-surface-variant)); font-size: 11px; }
+  textarea {
+    width: 100%; min-height: 180px; resize: vertical;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px;
+    color: hsl(var(--on-surface)); background: hsl(var(--surface-dim) / .35);
+    border: 1px solid hsl(var(--outline)); border-radius: 10px; padding: 10px;
+  }
+  input[type=text] {
+    border: 1px solid hsl(var(--outline)); border-radius: 8px; padding: 6px 10px;
+    color: hsl(var(--on-surface)); background: hsl(var(--surface-dim) / .35); font-size: 13px;
+  }
+  input[type=range] { flex: 1; accent-color: hsl(var(--primary)); }
+  details { margin-top: 6px; }
+  summary { cursor: pointer; color: hsl(var(--on-surface-variant)); font-size: 13px; }
+  pre {
+    background: hsl(var(--surface-dim) / .35); border: 1px solid hsl(var(--border));
+    border-radius: 10px; padding: 10px; overflow: auto; font-size: 11.5px; line-height: 1.5;
+  }
+  .hint { color: hsl(var(--on-surface-variant)); font-size: 12px; margin-top: 6px; }
+  .bar { height: 6px; border-radius: 3px; background: hsl(var(--surface-variant)); overflow: hidden; }
+  .bar > div { height: 100%; background: hsl(var(--primary)); width: 0%; transition: width .12s linear; }
+  .switch { display: flex; align-items: center; gap: 8px; }
+  .switch input { accent-color: hsl(var(--primary)); width: 16px; height: 16px; }
+</style>
+</head>
+<body>
+  <h2>🪟 <span id="title">可自定义悬浮窗</span></h2>
+  <div class="sub" id="subTitle">Slint 主题驱动的透明悬浮窗 · 状态监视与静音/耳返控制</div>
+
+  <div class="card">
+    <div class="row" style="margin-top:0">
+      <span class="badge" id="stateBadge">…</span>
+      <span style="flex:1"></span>
+      <button id="btnShow"></button>
+      <button id="btnRestart"></button>
+    </div>
+    <div class="kv" style="margin-top:10px">
+      <span class="k" id="kStream">串流</span><span class="v" id="vStream">–</span>
+      <span class="k" id="kLevel">输入电平</span>
+      <span class="v"><span class="bar" style="display:inline-block;width:120px;vertical-align:middle"><div id="vLevelBar"></div></span> <span id="vLevel">–</span></span>
+      <span class="k" id="kMute">静音</span><span class="v" id="vMute">–</span>
+      <span class="k" id="kMon">耳返</span><span class="v" id="vMon">–</span>
+      <span class="k" id="kSession">本次连接</span><span class="v" id="vSession">–</span>
+      <span class="k" id="kDev">设备</span><span class="v" id="vDev">–</span>
+      <span class="k" id="kFmt">格式</span><span class="v" id="vFmt">–</span>
+    </div>
+    <div class="errbox" id="errBox"></div>
+  </div>
+
+  <div class="card">
+    <h3 id="hTheme">主题（.slint）</h3>
+    <div class="themes" id="themeList"></div>
+    <div class="actions">
+      <button class="primary" id="btnApply"></button>
+      <button id="btnReload"></button>
+      <button id="btnRestore"></button>
+      <button id="btnResetPos"></button>
+    </div>
+    <div class="hint" id="themeHint"></div>
+  </div>
+
+  <div class="card">
+    <h3 id="hEditor">新建 / 编辑主题</h3>
+    <div class="row">
+      <label id="kName">文件名</label>
+      <input type="text" id="themeName" placeholder="my-theme.slint" style="flex:1" />
+    </div>
+    <textarea id="themeSrc" spellcheck="false"></textarea>
+    <div class="actions">
+      <button class="primary" id="btnSave"></button>
+      <button id="btnLoadCur"></button>
+    </div>
+    <div class="hint" id="editorHint"></div>
+    <div class="ai-tip">
+      <b id="aiTipTitle"></b>
+      <span id="aiTipBody"></span>
+      <div class="pathbox">
+        <span id="pathLabel"></span><code id="themesDir">…</code>
+      </div>
+    </div>
+    <details>
+      <summary id="sumContract">主题契约（可用属性 / 回调）</summary>
+      <pre id="contractPre"></pre>
+    </details>
+  </div>
+
+  <div class="card">
+    <h3 id="hOpts">选项</h3>
+    <div class="row switch">
+      <input type="checkbox" id="chkVisible" />
+      <label for="chkVisible" id="lblVisible" style="min-width:0">显示悬浮窗</label>
+    </div>
+    <div class="row">
+      <label id="lblTick">刷新间隔</label>
+      <input type="range" id="rngTick" min="50" max="1000" step="10" />
+      <span id="vTick" style="min-width:52px;text-align:right;font-variant-numeric:tabular-nums"></span>
+    </div>
+    <div class="row switch">
+      <input type="checkbox" id="chkWdis" />
+      <label for="chkWdis" id="lblWdis" style="min-width:0">显示语音转录气泡</label>
+    </div>
+    <div class="hint" id="wdisExplain"></div>
+    <div class="row">
+      <label class="key" id="lblWdisHold">转录保持</label>
+      <input type="range" id="rngWdisHold" min="1000" max="30000" step="500" />
+      <span id="vWdisHold" style="min-width:52px;text-align:right;font-variant-numeric:tabular-nums"></span>
+    </div>
+  </div>
+
+<script>
+// ── postMessage bridge (see MicYou usePluginPanelBridge) ─────────────
+function call(api, args) {
+  return new Promise((resolve, reject) => {
+    const id = Math.random().toString(36).slice(2);
+    const onMsg = (e) => {
+      if (e.data && e.data.__micyou === 1 && e.data.id === id) {
+        window.removeEventListener('message', onMsg);
+        e.data.ok ? resolve(e.data.value) : reject(new Error(e.data.error));
+      }
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ __micyou: 1, id, api, args: args || {} }, '*');
+  });
+}
+const $ = (id) => document.getElementById(id);
+let L = {};           // locale strings
+let cfg = {};         // last config snapshot
+let locale = 'zh';
+
+const STR = {
+  zh: {
+    title: '可自定义悬浮窗', sub: 'Slint 主题驱动的透明悬浮窗 · 状态监视与静音/耳返控制',
+    show: '显示', hide: '隐藏', restart: '重启悬浮窗', apply: '应用所选主题',
+    reload: '热重载当前主题', restore: '恢复内置主题', resetPos: '位置复位',
+    hTheme: '主题（.slint）', hEditor: '新建 / 编辑主题', hOpts: '选项',
+    kName: '文件名', save: '保存为新主题', loadCur: '载入所选主题到编辑器',
+    lblVisible: '显示悬浮窗', lblTick: '刷新间隔',
+    lblWdis: '显示语音转录气泡', lblWdisHold: '转录保持',
+    aiTipTitle: '优先使用 AI / LLM 修改主题。',
+    aiTipBody: ' .slint 是声明式 UI 语言：把目标主题文件与下方「主题契约」一起交给 AI 助手（或直接用文本编辑器）修改，保存后点「热重载当前主题」即可生效，无需重启 MicYou。',
+    pathLabel: '主题文件目录：',
+    editHint: '直接增删该目录下 .slint 文件亦可：主题列表约 5 秒内自动刷新；在线编辑器仅适合快速微调。',
+    wdisExplain: '语音转录来自 MicYou 插件 WhatdidIsay（本地离线识别）。它每识别完一句话，会通过其广播协议（魔数为 “WDIS” 的二进制帧，经宿主消息总线广播）推送识别文本；开启后悬浮窗会在下方短暂展示该文本（ring 为直径宽文本框渐变消失，pill 为底部下伸面板收回）。',
+    kStream: '串流', kLevel: '输入电平', kMute: '静音', kMon: '耳返',
+    kSession: '本次连接', kDev: '设备', kFmt: '格式',
+    yes: '是', no: '否', on: '开', off: '关', none: '–',
+    themeHint: '主题文件位于插件目录 themes/ 下；直接增删文件后列表约 5 秒内自动刷新。切换为热替换，不重启进程。',
+    editorHint: '保存后立即出现在主题列表中（不会自动切换）。',
+    sumContract: '主题契约（可用属性 / 回调，全部可选）',
+    errTitle: '主题错误：',
+    st: { running: '运行中', starting: '启动中', crashed: '已崩溃', hidden: '已隐藏', missing: '缺少 helper', stopped: '已停止', idle: '未启用' },
+  },
+  en: {
+    title: 'Customizable Floating Window', sub: 'Slint-themed transparent HUD · status monitoring + mute/monitoring control',
+    show: 'Show', hide: 'Hide', restart: 'Restart', apply: 'Apply selected',
+    reload: 'Hot-reload theme', restore: 'Restore built-ins', resetPos: 'Reset position',
+    hTheme: 'Theme (.slint)', hEditor: 'Create / edit theme', hOpts: 'Options',
+    kName: 'File name', save: 'Save as new theme', loadCur: 'Load selected into editor',
+    lblVisible: 'Show floating window', lblTick: 'Refresh interval',
+    lblWdis: 'Show speech transcript bubbles', lblWdisHold: 'Transcript hold',
+    aiTipTitle: 'Prefer an AI / LLM for theme edits.',
+    aiTipBody: ' .slint is a declarative UI language: hand the target theme file plus the contract below to your AI assistant (or edit it in any text editor), save, then press “Hot-reload theme” — no MicYou restart needed.',
+    pathLabel: 'Theme directory: ',
+    editHint: 'Adding/removing .slint files in that directory works too (list refreshes within ~5 s); the in-panel editor is for quick tweaks only.',
+    wdisExplain: 'Transcripts come from the MicYou plugin WhatdidIsay (fully local, offline speech recognition). After each finished sentence it broadcasts the text via its broadcast protocol (binary frames with magic "WDIS" over the host message bus); when enabled, the floating window briefly shows the text (ring: diameter-wide box that fades out; pill: slide-down panel).',
+    kStream: 'Streaming', kLevel: 'Input level', kMute: 'Muted', kMon: 'Monitoring',
+    kSession: 'Session', kDev: 'Device', kFmt: 'Format',
+    yes: 'yes', no: 'no', on: 'on', off: 'off', none: '–',
+    themeHint: 'Themes live in <plugin dir>/themes/. Add or remove files there and the list refreshes within ~5 s. Switching hot-swaps without restarting.',
+    editorHint: 'Saved themes appear in the list above (not auto-applied).',
+    sumContract: 'Theme contract (properties / callbacks — all optional)',
+    errTitle: 'Theme error: ',
+    st: { running: 'running', starting: 'starting', crashed: 'crashed', hidden: 'hidden', missing: 'helper missing', stopped: 'stopped', idle: 'disabled' },
+  },
+};
+
+const CONTRACT = `输入属性 (in property，缺失即忽略):
+  input-level float      原始输入电平 0..1
+  processed-level float  处理后电平 0..1
+  smooth-level float     平滑电平 (~30Hz EMA，helper 侧)
+  level-percent int      smooth-level × 100
+  muted bool             宿主静音态（权威）
+  streaming bool         音频会话串流中
+  monitoring bool        宿主耳返态
+  sample-rate int        Hz
+  channels int
+  queued-ms float        输出队列延迟
+  session-seconds int    本次连接时长（秒）
+  session-text string    "M:SS" / "H:MM:SS"
+  device-label string    已连接设备名
+  device-mode string     wifi / usb / web
+  info-text string       "48.0kHz · 1ch · q13ms"
+  arc-path string        100×100 视图框圆弧 SVG path（r=45, 12 点起顺时针, 随 smooth-level）
+  bars-path string       100×100 视图框 8 根旋转波形条线段（helper ~30Hz 推进相位）
+
+输出回调 (callback，主题内自行触发):
+  mute-toggle()            切换宿主静音
+  monitoring-toggle()      切换耳返
+  menu-action(string)      自定义菜单动作（"reload-theme" 内置）
+  hide-window()            隐藏悬浮窗（并持久化 visible=false）
+  drag-start()             自定义拖动开始（配合下面两个实现“点击≠拖动”）
+  drag-move(float, float)  拖动增量（逻辑像素，自按下点）
+  drag-end()               拖动结束（上报位置持久化）
+
+窗口属性建议:
+  no-frame: true;  always-on-top: true;  background: transparent;
+  （"不占任务栏" 由 helper 在窗口层处理：Win WS_EX_TOOLWINDOW /
+    X11 _NET_WM_STATE_SKIP_TASKBAR / macOS Accessory；Wayland 由合成器决定）
+
+注意：Slint 1.18 软件渲染器不支持元素旋转（transform-rotation 被忽略），
+      斜线/旋转几何请用 Path 线段（静态 commands 或 helper 的 arc/bars-path）。
+      右键菜单推荐 ContextMenuArea + Menu/MenuItem（原生菜单）。`;
+
+function t(k) { return (L[k] ?? STR.en[k] ?? k); }
+
+function fmtBool(v, on, off) { return v ? on : off; }
+
+// ── rendering ────────────────────────────────────────────────────────
+function renderThemeList() {
+  const list = Array.isArray(cfg.themeList) ? cfg.themeList : [];
+  const cur = cfg.theme || 'ring.slint';
+  const box = $('themeList');
+  box.innerHTML = '';
+  if (!list.length) {
+    box.innerHTML = '<div class="hint">themes/ 为空 — 点击「恢复内置主题」</div>';
+    return;
+  }
+  for (const name of list) {
+    const lab = document.createElement('label');
+    const rad = document.createElement('input');
+    rad.type = 'radio'; rad.name = 'theme'; rad.value = name;
+    rad.checked = (name === cur);
+    rad.addEventListener('change', () => selectTheme(name));
+    lab.appendChild(rad);
+    lab.appendChild(document.createTextNode(name));
+    if (name === cur) {
+      const s = document.createElement('span');
+      s.className = 'cur'; s.textContent = '●';
+      lab.appendChild(s);
+    }
+    box.appendChild(lab);
+  }
+}
+
+function renderStatus() {
+  const st = cfg.status || {};
+  const hs = cfg.helperState || 'idle';
+  const badge = $('stateBadge');
+  badge.textContent = (L.st && L.st[hs]) || hs;
+  badge.className = 'badge ' + (hs === 'running' ? 'ok' : (hs === 'crashed' || hs === 'missing' ? 'err' : ''));
+  $('btnShow').textContent = cfg.visible ? t('hide') : t('show');
+  $('vStream').textContent = st.streaming == null ? t('none') : fmtBool(st.streaming, t('yes'), t('no'));
+  const lvl = st.level == null ? 0 : st.level;
+  $('vLevelBar').style.width = Math.round(Math.min(1, lvl) * 100) + '%';
+  $('vLevel').textContent = st.level == null ? t('none') : (lvl * 100).toFixed(0) + '%';
+  $('vMute').textContent = st.muted == null ? t('none') : fmtBool(st.muted, t('yes'), t('no'));
+  $('vMon').textContent = st.monitoring == null ? t('none') : fmtBool(st.monitoring, t('on'), t('off'));
+  $('vSession').textContent = st.sessionText || t('none');
+  $('vDev').textContent = st.deviceLabel || t('none');
+  $('vFmt').textContent = st.sampleRate ? (st.sampleRate / 1000).toFixed(1) + 'kHz · ' + st.channels + 'ch · q' + (st.queuedMs ?? 0).toFixed(0) + 'ms' : t('none');
+  const err = cfg.themeError || '';
+  const eb = $('errBox');
+  eb.style.display = err ? 'block' : 'none';
+  eb.textContent = err ? t('errTitle') + err : '';
+  $('chkVisible').checked = !!cfg.visible;
+  $('chkWdis').checked = cfg.wdisEnabled !== false;
+  const hold = cfg.wdisHoldMs ?? 4000;
+  $('rngWdisHold').value = hold;
+  $('vWdisHold').textContent = (hold / 1000).toFixed(1) + ' s';
+  const ms = cfg.updateMs ?? 100;
+  $('rngTick').value = ms;
+  $('vTick').textContent = ms + ' ms';
+}
+
+function applyLocale() {
+  L = (locale || '').startsWith('zh') ? STR.zh : STR.en;
+  $('title').textContent = t('title');
+  $('subTitle').textContent = t('sub');
+  $('btnRestart').textContent = t('restart');
+  $('btnApply').textContent = t('apply');
+  $('btnReload').textContent = t('reload');
+  $('btnRestore').textContent = t('restore');
+  $('btnResetPos').textContent = t('resetPos');
+  $('hTheme').textContent = t('hTheme');
+  $('hEditor').textContent = t('hEditor');
+  $('hOpts').textContent = t('hOpts');
+  $('kName').textContent = t('kName');
+  $('btnSave').textContent = t('save');
+  $('btnLoadCur').textContent = t('loadCur');
+  $('lblVisible').textContent = t('lblVisible');
+  $('lblTick').textContent = t('lblTick');
+  $('aiTipTitle').textContent = t('aiTipTitle');
+  $('aiTipBody').textContent = t('aiTipBody');
+  $('pathLabel').textContent = t('pathLabel');
+  $('editorHint').textContent = t('editHint');
+  $('kStream').textContent = t('kStream');
+  $('kLevel').textContent = t('kLevel');
+  $('kMute').textContent = t('kMute');
+  $('kMon').textContent = t('kMon');
+  $('kSession').textContent = t('kSession');
+  $('kDev').textContent = t('kDev');
+  $('kFmt').textContent = t('kFmt');
+  $('themeHint').textContent = t('themeHint');
+  $('editorHint').textContent = t('editorHint');
+  $('sumContract').textContent = t('sumContract');
+  $('contractPre').textContent = CONTRACT;
+  renderStatus();
+}
+
+// ── actions ──────────────────────────────────────────────────────────
+async function selectTheme(name) {
+  await call('set_config', { key: 'theme', value: name });
+  await call('trigger', { action: 'apply-theme' });
+}
+async function refresh() {
+  try {
+    const next = await call('get_config', {});
+    const changedList = JSON.stringify((next || {}).themeList) !== JSON.stringify((cfg || {}).themeList)
+      || (next || {}).theme !== (cfg || {}).theme;
+    cfg = next || {};
+    if (changedList) renderThemeList();
+    renderStatus();
+  } catch (e) { /* host not ready */ }
+}
+
+async function main() {
+  try { locale = await call('locale', {}) || 'zh'; } catch (e) { locale = 'zh'; }
+  applyLocale();
+  await refresh();
+  renderThemeList();
+
+  $('btnShow').onclick = async () => {
+    await call('trigger', { action: cfg.visible ? 'hide' : 'show' });
+    refresh();
+  };
+  $('btnRestart').onclick = async () => { await call('trigger', { action: 'restart-helper' }); refresh(); };
+  $('btnApply').onclick = async () => {
+    const sel = document.querySelector('input[name=theme]:checked');
+    if (sel) await selectTheme(sel.value);
+    refresh();
+  };
+  $('btnReload').onclick = async () => { await call('trigger', { action: 'reload' }); refresh(); };
+  $('btnRestore').onclick = async () => {
+    if (!confirm(locale.startsWith('zh') ? '覆盖 themes/ 中的内置主题文件（ring/pill/minimal.slint）？自定义文件不受影响。' : 'Overwrite built-in themes (ring/pill/minimal.slint)? Custom files are untouched.')) return;
+    await call('trigger', { action: 'restore-themes' });
+    refresh();
+  };
+  $('btnResetPos').onclick = async () => { await call('trigger', { action: 'reset-pos' }); refresh(); };
+  $('btnSave').onclick = async () => {
+    let name = $('themeName').value.trim();
+    if (!name) { alert(locale.startsWith('zh') ? '请填写文件名' : 'File name required'); return; }
+    if (!name.endsWith('.slint')) name += '.slint';
+    await call('set_config', { key: 'themeDraftName', value: name });
+    await call('set_config', { key: 'themeDraft', value: $('themeSrc').value });
+    await call('trigger', { action: 'save-theme' });
+    refresh();
+  };
+  $('btnLoadCur').onclick = async () => {
+    const sel = document.querySelector('input[name=theme]:checked');
+    if (!sel) return;
+    $('themeName').value = sel.value;
+    // The panel has no fs access; ask the plugin to stage the file content.
+    await call('set_config', { key: 'themeDraftName', value: sel.value });
+    await call('trigger', { action: 'stage-theme' });
+    // staged content arrives via config key themeDraft on next poll
+    setTimeout(async () => {
+      await refresh();
+      if (typeof cfg.themeDraft === 'string') $('themeSrc').value = cfg.themeDraft;
+    }, 400);
+  };
+  $('chkVisible').onchange = async (e) => {
+    await call('trigger', { action: e.target.checked ? 'show' : 'hide' });
+    refresh();
+  };
+  let tickTimer = null;
+  $('rngTick').oninput = (e) => { $('vTick').textContent = e.target.value + ' ms'; };
+  $('chkWdis').onchange = async (e) => {
+    await call('set_config', { key: 'wdisEnabled', value: e.target.checked });
+    refresh();
+  };
+  $('rngWdisHold').oninput = (e) => { $('vWdisHold').textContent = (e.target.value / 1000).toFixed(1) + ' s'; };
+  $('rngWdisHold').onchange = async (e) => {
+    await call('set_config', { key: 'wdisHoldMs', value: Number(e.target.value) });
+    refresh();
+  };
+  $('rngTick').onchange = async (e) => {
+    await call('set_config', { key: 'updateMs', value: Number(e.target.value) });
+    refresh();
+  };
+
+  setInterval(refresh, 1000);
+}
+main();
+</script>
+</body>
+</html>
