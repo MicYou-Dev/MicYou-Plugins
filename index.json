@@ -35,6 +35,48 @@
       "platforms": []
     },
     {
+      "id": "opss.customizable-floating-window",
+      "name": "Customizable Floating Window",
+      "nameI18n": {
+        "zh": "可自定义悬浮窗",
+        "zh-CN": "可自定义悬浮窗",
+        "en": "Customizable Floating Window"
+      },
+      "version": "1.0.0",
+      "author": "",
+      "description": "A customizable floating window for MicYou status monitoring and control.",
+      "descriptionI18n": {
+        "zh": "可自定义的悬浮窗：用 .slint 主题文件绘制透明悬浮窗，实时展示音频状态与本次连接时长，左键切静音、拖动移窗、右键菜单。",
+        "zh-CN": "可自定义的悬浮窗：用 .slint 主题文件绘制透明悬浮窗，实时展示音频状态与本次连接时长，左键切静音、拖动移窗、右键菜单。"
+      },
+      "runtime": "native",
+      "kind": "ui",
+      "capabilities": [
+        "audio.state",
+        "control.observe",
+        "control.intercept",
+        "config.read",
+        "config.write"
+      ],
+      "license": "GPL-3.0-only",
+      "homepage": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
+      "repository": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.customizable-floating-window/plugin.json",
+      "downloadUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.customizable-floating-window/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.customizable-floating-window/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.customizable-floating-window",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Customizable-Floating-Window/refs/heads/main/README.md",
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ]
+    },
+    {
       "id": "opss.focus-capture",
       "name": "FocusCapture",
       "nameI18n": {
@@ -80,18 +122,19 @@
         "zh": "曼波RVC变声器",
         "zh-CN": "曼波RVC变声器"
       },
-      "version": "1.1.0",
+      "version": "1.2.0",
       "author": "",
-      "description": "Mambo RVC voice changer: local real-time streaming AI voice conversion (check README to download CUDA dlls), with support for loading your own RVC models.",
+      "description": "Mambo RVC voice changer: local real-time streaming AI voice conversion with one-click CUDA runtime fetch (PyPI mirrors) in the settings panel, and support for loading your own RVC models.",
       "descriptionI18n": {
-        "zh": "曼波RVC变声器：本地实时流式 AI 变声，支持加载你自己的 RVC 模型。阅读README下载CUDA运行库。",
-        "zh-CN": "曼波RVC变声器：本地实时流式 AI 变声，支持加载你自己的 RVC 模型。阅读README下载CUDA运行库。"
+        "zh": "曼波RVC变声器：本地实时流式 AI 变声，设置面板一键拉取 CUDA 运行库（国内镜像+断点续传），支持加载你自己的 RVC 模型。",
+        "zh-CN": "曼波RVC变声器：本地实时流式 AI 变声，设置面板一键拉取 CUDA 运行库（国内镜像+断点续传），支持加载你自己的 RVC 模型。"
       },
       "runtime": "native",
       "kind": "dsp",
       "capabilities": [
         "dsp.node",
-        "config.read"
+        "config.read",
+        "config.write"
       ],
       "license": "Unlicense",
       "homepage": "https://github.com/OrientCOMPASS/Mambo-RVC-ONNX",
