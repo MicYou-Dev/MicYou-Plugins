@@ -1,0 +1,45 @@
+[package]
+name = "cfw-helper"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "Slint floating-window process for the MicYou customizable-floating-window plugin (runtime .slint interpreter UI)"
+publish = false
+
+[[bin]]
+name = "floating_helper"
+path = "src/main.rs"
+
+[dependencies]
+cfw-protocol = { path = "../protocol" }
+serde.workspace = true
+serde_json.workspace = true
+pollster = "1.0"
+png = "0.18"
+raw-window-handle = "0.6"
+
+# Slint 1.18: winit windowing + software renderer only (no GL dependency —
+# small binary, robust on every driver stack, full transparency support).
+# raw-window-handle-06 exposes Window::window_handle() used by platform.rs to
+# apply the "skip taskbar" window flags Slint itself does not model.
+slint = { version = "1.18.1", default-features = false, features = [
+    "std",
+    "backend-winit",
+    "renderer-software",
+    "raw-window-handle-06",
+    "compat-1-2",
+] }
+slint-interpreter = { version = "1.18.1", default-features = false, features = [
+    "backend-winit",
+    "renderer-software",
+    "raw-window-handle-06",
+    "compat-1-2",
+] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+x11-dl = "2.21"
+
+[dev-dependencies]
+# Headless platform for unit tests that instantiate components (no display).
+i-slint-backend-testing = "1.18.1"

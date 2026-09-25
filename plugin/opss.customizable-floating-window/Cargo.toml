@@ -1,0 +1,44 @@
+# Workspace root for the MicYou "Customizable Floating Window" plugin.
+#
+# Members:
+#   plugin/            — the MicYou native plugin (cdylib, C ABI v1 / Host API v2)
+#   helper/            — the Slint floating-window process (runtime .slint interpreter)
+#   tools/mock-host/   — development harness that emulates the MicYou host for E2E tests
+#
+# The distributed plugin.zip is assembled from these crates by CI
+# (.github/workflows/release.yml) — see docs/TECHNICAL.md §9.
+
+[workspace]
+members = ["protocol", "plugin", "helper", "tools/mock-host"]
+resolver = "2"
+
+[workspace.package]
+version = "1.0.0"
+edition = "2021"
+# Slint 1.18 requires rustc >= 1.95, so that is the MSRV of this workspace.
+rust-version = "1.95"
+license = "GPL-3.0-only"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+codegen-units = 1
+strip = true
+# NOTE: never set panic = "abort" here — the `plugin` cdylib runs *inside* the
+# MicYou host process; abort would take the whole application down. Unwinding
+# lets lib.rs's catch_unwind keep plugin panics from crossing the FFI boundary.
+
+# Low-memory profile for constrained dev sandboxes / CI caches: same
+# correctness, fatter but functionally identical binaries. Release builds
+# (the distributed zip) always use [profile.release] above.
+[profile.sandbox]
+inherits = "release"
+opt-level = 1
+lto = false
+codegen-units = 16
+strip = true

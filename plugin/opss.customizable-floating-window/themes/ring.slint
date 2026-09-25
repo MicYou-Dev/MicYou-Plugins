@@ -1,0 +1,212 @@
+// cfw-bundled: 3   (built-in theme revision; remove this line to freeze your own edits)
+// ring.slint — 默认悬浮窗主题：复刻 MicYou v1 的悬浮音量环
+//
+// 84×84 透明无边框置顶圆窗：
+//   · 串流中：底色圆环 + 随输入电平扫过的圆弧（圆头线帽）+ 8 根旋转波形条 + 中心辉光
+//   · 静音时：红色圆环 + 斜杠
+//   · 空闲时：灰色淡环 + 中心小圆点
+//   · 耳返开启：外圈绿色细环提示
+//   · WDIS 转录：圆下方伸出「宽 = 直径」的文本框，一段时间后渐变消失
+// 交互（全部在本文件定义）：
+//   · 左键单击（移动事件 <2 次）= 切换宿主静音
+//   · 左键拖动 = 移动窗口（drag 三回调，helper 侧全局光标 1:1 跟踪）
+//   · 右键单击 = 切换耳返（监听）
+//
+// 数据契约（全部可选，缺失即忽略）见 docs/TECHNICAL.md。
+
+export component FloatingRing inherits Window {
+    // ── 数据输入（helper 每帧写入） ─────────────────────────────
+    in property <float> input-level: 0;        // 原始输入电平 0..1
+    in property <float> processed-level: 0;    // 处理后电平 0..1
+    in property <float> smooth-level: 0;       // 平滑电平（~30Hz EMA）
+    in property <int> level-percent: 0;
+    in property <bool> muted: false;
+    in property <bool> streaming: false;
+    in property <bool> monitoring: false;
+    in property <int> sample-rate: 0;
+    in property <int> channels: 0;
+    in property <float> queued-ms: 0;
+    in property <int> session-seconds: 0;
+    in property <string> session-text: "";
+    in property <string> device-label: "";
+    in property <string> device-mode: "";
+    in property <string> info-text: "";
+    in property <string> arc-path: "";         // 100×100 视图框圆弧（随平滑电平）
+    in property <string> bars-path: "";        // 100×100 视图框 8 根波形条线段
+    in property <string> wdis-text: "";        // WDIS 语音转录文本
+    in property <bool> wdis-visible: false;    // WDIS 展示开关（helper 定时收回）
+
+    // ── 交互输出（helper 已挂接） ──────────────────────────────
+    callback mute-toggle();
+    callback monitoring-toggle();
+    callback hide-window();
+    callback drag-start();                     // 按下（helper 起全局光标跟踪）
+    callback drag-move();                      // 移动中（moved 事件驱动）
+    callback drag-end();                       // 抬起（上报位置持久化）
+
+    // ── 主题外观（可自行修改） ─────────────────────────────────
+    in property <color> accent: #4ea1ff;       // 串流主色
+    in property <color> error: #ff5a5a;        // 静音红
+    in property <color> idle: #9aa0a6;         // 空闲灰
+    in property <color> mon: #3ddc84;          // 耳返绿
+    property <length> win: 84px;
+    property <length> ring-r: 34px;            // 圆环中心半径
+    property <length> stroke-u: 5.3px;         // 描边宽度（视图框单位，映射后 ≈4px）
+
+    // 窗口高度随 WDIS 展示区向下生长（顶边锚定不动）
+    width: win; height: win + box-h;
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "MicYou";
+
+    // WDIS 展示区高度 = 文本实际需要高度（preferred-height 驱动）+
+    // 内边距与间隙；伸出/收回动画；渐变消失
+    property <length> box-h: wdis-visible ? (wtxt.preferred-height + 16px) : 0px;
+    property <float> box-alpha: wdis-visible ? 1 : 0;
+    animate box-h { duration: 260ms; easing: ease; }
+    animate box-alpha { duration: 420ms; easing: ease; }
+
+    // 状态色：静音红 > 串流主色 > 空闲灰
+    property <color> content: muted ? error : (streaming ? accent : idle);
+    property <float> lvl: min(1, max(0, smooth-level));
+    property <int> move-events: 0;
+    property <bool> pressing: false;
+
+    // ── 耳返提示外环 ──
+    Path {
+        x: 1px; y: 1px;
+        width: root.win - 2px; height: root.win - 2px;
+        viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+        commands: "M 50 3 A 47 47 0 1 1 50 97 A 47 47 0 1 1 50 3";
+        stroke: root.mon.with-alpha(0.8);
+        stroke-width: 2px;
+        fill: transparent;
+        opacity: root.monitoring ? 1 : 0;
+    }
+
+    // ── 底色圆环（完整圆，两条半弧拼成） ──
+    Path {
+        x: 4px; y: 4px;
+        width: root.win - 8px; height: root.win - 8px;
+        viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+        commands: "M 50 5 A 45 45 0 1 1 50 95 A 45 45 0 1 1 50 5";
+        stroke: root.content.with-alpha(root.streaming && !root.muted ? 0.16 : 0.32);
+        stroke-width: root.stroke-u;
+        fill: transparent;
+    }
+
+    // ── 电平圆弧（路径由 helper 按平滑电平生成） ──
+    Path {
+        x: 4px; y: 4px;
+        width: root.win - 8px; height: root.win - 8px;
+        viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+        commands: root.arc-path;
+        stroke: root.content;
+        stroke-width: root.stroke-u;
+        stroke-line-cap: round;
+        fill: transparent;
+        opacity: root.streaming && !root.muted ? 1 : 0;
+    }
+
+    // ── 8 根旋转波形条（v1 FloatingAudioVisualizer 复刻）
+    //    软件渲染器不支持元素旋转，旋转几何用 Path 线段表达；
+    //    线段由 helper 按相位 ~30Hz 生成，主题侧零计算。 ──
+    Path {
+        x: 4px; y: 4px;
+        width: root.win - 8px; height: root.win - 8px;
+        viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+        commands: root.bars-path;
+        stroke: root.content.with-alpha(min(0.6, 0.55 * root.lvl));
+        stroke-width: 3.2px;
+        stroke-line-cap: round;
+        fill: transparent;
+        opacity: root.streaming && !root.muted ? 1 : 0;
+    }
+
+    // ── 中心辉光（电平驱动） ──
+    Rectangle {
+        property <length> d: 28px * root.lvl;
+        width: d; height: d;
+        x: (root.win - d) / 2; y: (root.win - d) / 2;
+        border-radius: d / 2;
+        background: root.content.with-alpha(0.18 * root.lvl);
+        opacity: root.streaming && !root.muted && root.lvl > 0.05 ? 1 : 0;
+    }
+
+    // ── 空闲中心圆点（v1 IdleVisualizer） ──
+    Rectangle {
+        property <length> d: root.ring-r * 0.6;
+        width: d; height: d;
+        x: (root.win - d) / 2; y: (root.win - d) / 2;
+        border-radius: d / 2;
+        background: root.content.with-alpha(0.12);
+        opacity: !root.streaming && !root.muted ? 1 : 0;
+    }
+
+    // ── 静音斜杠（v1 MutedVisualizer；静态对角线段，无需旋转） ──
+    Path {
+        x: 4px; y: 4px;
+        width: root.win - 8px; height: root.win - 8px;
+        viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+        commands: "M 33 33 L 67 67";
+        stroke: root.content;
+        stroke-width: 4px;
+        stroke-line-cap: round;
+        fill: transparent;
+        opacity: root.muted ? 1 : 0;
+    }
+
+    // ── WDIS 转录展示区：宽 = 直径、高 = 文本需要高度；
+    //    明亮轻盈风格（白底深字 + 状态色描边），与圆环的通透感一致 ──
+    Rectangle {
+        x: 0px; y: root.win + 4px;
+        width: root.win; height: root.box-h > 4px ? root.box-h - 4px : 0px;
+        border-radius: 12px;
+        background: #ffffffeb;
+        border-width: 1px;
+        border-color: root.content.with-alpha(0.35);
+        opacity: root.box-alpha;
+        clip: true;
+        wtxt := Text {
+            x: 8px; y: 6px;
+            width: parent.width - 16px;
+            text: root.wdis-text;
+            color: #1f2328;
+            font-size: 10px;
+            wrap: word-wrap;
+        }
+    }
+
+    // ── 交互层 ──
+    // 左键：单击（移动事件 <2 次）= 切静音；拖动 = 移窗
+    // 右键：切换耳返
+    TouchArea {
+        mouse-cursor: pointer;
+        pointer-event(e) => {
+            if (e.kind == PointerEventKind.down && e.button == PointerEventButton.left) {
+                root.pressing = true;
+                root.move-events = 0;
+                root.drag-start();
+            } else if (e.kind == PointerEventKind.up && e.button == PointerEventButton.left) {
+                if (root.pressing) {
+                    root.pressing = false;
+                    root.drag-end();
+                    if (root.move-events < 2) {
+                        root.mute-toggle();          // 单击 = 切换静音
+                    }                                // 否则位置已由 drag-end 上报
+                }
+            } else if (e.kind == PointerEventKind.up && e.button == PointerEventButton.right) {
+                root.monitoring-toggle();            // 右键 = 切换耳返
+            } else if (e.kind == PointerEventKind.cancel) {
+                root.pressing = false;
+            }
+        }
+        moved => {
+            if (root.pressing) {
+                root.move-events += 1;
+                root.drag-move();
+            }
+        }
+    }
+}

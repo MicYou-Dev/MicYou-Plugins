@@ -1,0 +1,117 @@
+{
+  "id": "opss.customizable-floating-window",
+  "name": "Customizable Floating Window",
+  "version": "1.0.0",
+  "description": "A customizable floating window for MicYou status monitoring and control.",
+  "descriptionI18n": {
+    "zh": "可自定义的悬浮窗：用 .slint 主题文件绘制透明悬浮窗，实时展示音频状态与本次连接时长，左键切静音、拖动移窗、右键菜单。",
+    "zh-CN": "可自定义的悬浮窗：用 .slint 主题文件绘制透明悬浮窗，实时展示音频状态与本次连接时长，左键切静音、拖动移窗、右键菜单。"
+  },
+  "nameI18n": {
+    "zh": "可自定义悬浮窗",
+    "zh-CN": "可自定义悬浮窗",
+    "en": "Customizable Floating Window"
+  },
+  "license": "GPL-3.0-only",
+  "runtime": "native",
+  "entry": "customizable_floating_window",
+  "platforms": [
+    "windows",
+    "linux",
+    "macos"
+  ],
+  "arches": [
+    "x86_64",
+    "aarch64"
+  ],
+  "apiVersion": 2,
+  "capabilities": [
+    "audio.state",
+    "control.observe",
+    "control.intercept",
+    "config.read",
+    "config.write"
+  ],
+  "kind": "ui",
+  "ui": {
+    "route": "panel",
+    "label": "悬浮窗",
+    "panels": [
+      {
+        "id": "settings",
+        "label": "悬浮窗设置",
+        "entry": "panel.html"
+      }
+    ]
+  },
+  "keywords": [
+    "floating-window",
+    "slint",
+    "hud",
+    "volume-ring",
+    "overlay",
+    "theme"
+  ],
+  "config": {
+    "theme": "ring.slint",
+    "visible": true,
+    "updateMs": 100,
+    "windowX": null,
+    "windowY": null,
+    "themeList": [],
+    "themeError": "",
+    "helperState": "idle",
+    "status": {},
+    "wdisEnabled": true,
+    "wdisHoldMs": 4000
+  },
+  "configSchema": {
+    "fields": [
+      {
+        "key": "visible",
+        "fieldType": "boolean",
+        "label": "显示悬浮窗 Show floating window",
+        "description": "关闭后悬浮窗进程挂起（释放内存），重新开启时自动恢复。",
+        "default": true
+      },
+      {
+        "key": "theme",
+        "fieldType": "string",
+        "label": "主题文件 Theme file",
+        "description": "themes/ 目录下的 .slint 文件名。推荐在插件面板的下拉列表中选择（可实时热切换）。",
+        "default": "ring.slint"
+      },
+      {
+        "key": "updateMs",
+        "fieldType": "number",
+        "label": "状态刷新间隔 Refresh interval (ms)",
+        "description": "宿主音频状态推送周期，50–1000ms。越小越跟手，CPU 占用略增。",
+        "min": 50,
+        "max": 1000,
+        "step": 10,
+        "default": 100
+      },
+      {
+        "key": "wdisEnabled",
+        "fieldType": "boolean",
+        "label": "显示语音转录气泡",
+        "description": "语音转录来自 MicYou 插件 WhatdidIsay（本地离线识别）：每句话识别完成后经其广播协议（魔数 WDIS 的二进制帧、宿主消息总线广播）推送，悬浮窗下方短暂展示识别文本。",
+        "default": true
+      },
+      {
+        "key": "wdisHoldMs",
+        "fieldType": "number",
+        "label": "转录保持 (ms)",
+        "description": "识别文本在悬浮窗上的保持时间，1000–30000ms。",
+        "min": 1000,
+        "max": 30000,
+        "step": 500,
+        "default": 4000
+      }
+    ]
+  },
+  "repository": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
+  "homepage": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
+  "updateUrl": "https://github.com/OrientCOMPASS/Customizable-Floating-Window/releases/latest/download/plugin.json",
+  "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Customizable-Floating-Window/refs/heads/main/README.md"
+}

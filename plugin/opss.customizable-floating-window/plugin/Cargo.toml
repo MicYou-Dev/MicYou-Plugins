@@ -1,0 +1,19 @@
+[package]
+name = "cfw-plugin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "MicYou native plugin: customizable Slint floating window (status HUD + mute/monitoring control)"
+publish = false
+
+[lib]
+# The file name the MicYou host expects (manifest `entry`, no lib prefix,
+# platform suffix auto-completed by the host: .dll / .so / .dylib).
+name = "customizable_floating_window"
+crate-type = ["cdylib"]
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+cfw-protocol = { path = "../protocol" }

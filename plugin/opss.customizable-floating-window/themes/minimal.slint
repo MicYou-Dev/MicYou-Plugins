@@ -1,0 +1,117 @@
+// cfw-bundled: 3   (built-in theme revision; remove this line to freeze your own edits)
+// minimal.slint — 最小主题示例：一枚状态圆点（自定义主题的起点模板）
+//
+//   · 红 = 静音，蓝 = 串流（呼吸），灰 = 空闲；耳返开启时外圈绿环
+//   · 左键单击切换静音；左键拖动移窗；右键切换耳返
+//
+// 契约成员全部可选 —— 本文件只演示最小子集 + 交互三件套。
+
+export component MinimalDot inherits Window {
+    // 最小数据契约
+    in property <float> input-level: 0;
+    in property <float> smooth-level: 0;
+    in property <bool> muted: false;
+    in property <bool> streaming: false;
+    in property <bool> monitoring: false;
+    in property <string> session-text: "";
+
+    // 最小交互契约
+    callback mute-toggle();
+    callback monitoring-toggle();
+    callback drag-start();
+    callback drag-move();
+    callback drag-end();
+
+    width: 34px; height: 34px;
+    no-frame: true;
+    always-on-top: true;
+    background: transparent;
+    title: "MicYou";
+
+    in property <color> accent: #4ea1ff;
+    in property <color> error: #ff5a5a;
+    in property <color> idle: #9aa0a6;
+    in property <color> mon: #3ddc84;
+
+    property <color> content: muted ? error : (streaming ? accent : idle);
+    property <float> lvl: min(1, max(0, smooth-level));
+    property <int> move-events: 0;
+    property <bool> pressing: false;
+    property <float> breath: 1;
+
+    Timer {
+        interval: 800ms;
+        running: root.streaming && !root.muted;
+        triggered => { root.breath = root.breath == 1 ? 0.55 : 1; }
+    }
+
+    // 耳返提示外环
+    Rectangle {
+        width: 100%; height: 100%;
+        border-radius: root.width / 2;
+        background: transparent;
+        border-width: 1.5px;
+        border-color: root.mon.with-alpha(0.85);
+        opacity: root.monitoring ? 1 : 0;
+    }
+
+    // 外圈：状态环（串流时呼吸）
+    Rectangle {
+        width: 100%; height: 100%;
+        border-radius: root.width / 2;
+        background: transparent;
+        border-width: 2px;
+        border-color: root.content.with-alpha(root.streaming && !root.muted ? 0.35 * root.breath : 0.4);
+
+        // 内核：随电平微缩放
+        Rectangle {
+            property <length> d: 12px + 6px * root.lvl;
+            width: d; height: d;
+            x: (parent.width - d) / 2; y: (parent.height - d) / 2;
+            border-radius: d / 2;
+            background: root.content.with-alpha(root.muted ? 0.85 : (root.streaming ? 0.9 : 0.35));
+        }
+
+        // 静音斜杠（静态对角线段；软件渲染器无元素旋转）
+        Path {
+            width: 100%; height: 100%;
+            viewbox-x: 0; viewbox-y: 0; viewbox-width: 100; viewbox-height: 100;
+            commands: "M 26 26 L 74 74";
+            stroke: root.error;
+            stroke-width: 8px;
+            stroke-line-cap: round;
+            fill: transparent;
+            opacity: root.muted ? 1 : 0;
+        }
+    }
+
+    // 交互层：左键单击静音 / 拖动移窗 / 右键耳返
+    TouchArea {
+        mouse-cursor: pointer;
+        pointer-event(e) => {
+            if (e.kind == PointerEventKind.down && e.button == PointerEventButton.left) {
+                root.pressing = true;
+                root.move-events = 0;
+                root.drag-start();
+            } else if (e.kind == PointerEventKind.up && e.button == PointerEventButton.left) {
+                if (root.pressing) {
+                    root.pressing = false;
+                    root.drag-end();
+                    if (root.move-events < 2) {
+                        root.mute-toggle();
+                    }
+                }
+            } else if (e.kind == PointerEventKind.up && e.button == PointerEventButton.right) {
+                root.monitoring-toggle();
+            } else if (e.kind == PointerEventKind.cancel) {
+                root.pressing = false;
+            }
+        }
+        moved => {
+            if (root.pressing) {
+                root.move-events += 1;
+                root.drag-move();
+            }
+        }
+    }
+}
