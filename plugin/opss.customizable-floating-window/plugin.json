@@ -113,5 +113,6 @@
   "repository": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
   "homepage": "https://github.com/OrientCOMPASS/Customizable-Floating-Window",
   "updateUrl": "https://github.com/OrientCOMPASS/Customizable-Floating-Window/releases/latest/download/plugin.json",
+  "downloadUrl": "https://github.com/OrientCOMPASS/Customizable-Floating-Window/releases/latest/download/plugin.zip",
   "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/Customizable-Floating-Window/refs/heads/main/README.md"
 }
