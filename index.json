@@ -225,6 +225,45 @@
         "windows",
         "macos"
       ]
+    },
+    {
+      "id": "opss.your-mic-is-peaking",
+      "name": "YourMicIsPeaking",
+      "nameI18n": {
+        "zh": "一键炸麦",
+        "zh-CN": "一键炸麦"
+      },
+      "version": "1.0.0",
+      "author": "",
+      "description": "One-key mic peaking: slams your mic into hard-clipping distortion while auto-matching the output loudness to the input, so it blows up without getting louder. Toggle with a global hotkey or the panel button.",
+      "descriptionI18n": {
+        "zh": "一键炸麦：把麦克风信号湿推入硬削波产生破音失真，输出响度自动匹配输入——只炸不变大声。全局快捷键或面板按钮一键开关。",
+        "zh-CN": "一键炸麦：把麦克风信号湿推入硬削波产生破音失真，输出响度自动匹配输入——只炸不变大声。全局快捷键或面板按钮一键开关。"
+      },
+      "runtime": "native",
+      "kind": "dsp",
+      "capabilities": [
+        "dsp.node",
+        "config.read",
+        "config.write"
+      ],
+      "license": "Unlicense",
+      "homepage": "https://github.com/OrientCOMPASS/your-mic-is-peaking",
+      "repository": "https://github.com/OrientCOMPASS/your-mic-is-peaking",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.your-mic-is-peaking/plugin.json",
+      "downloadUrl": "https://github.com/OrientCOMPASS/your-mic-is-peaking/releases/latest/download/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.your-mic-is-peaking/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.your-mic-is-peaking",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/your-mic-is-peaking/refs/heads/main/README.md",
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ]
     }
   ]
 }

@@ -31,6 +31,7 @@ MicYou 的插件市场仓库：插件目录与打包产物
 | [Mambo RVC ONNX](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx) | [`opss.mambo-rvc-onnx`](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.mambo-rvc-onnx) | native | dsp | 1.2.0 |  | dsp.node, config.read, config.write | [zip](https://github.com/OrientCOMPASS/Mambo-RVC-ONNX/releases/latest/download/plugin.zip) |
 | [Voice-Typing](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.voice-typing) | [`opss.voice-typing`](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.voice-typing) | native | utility | 0.1.1 |  | config.read, config.write | [zip](https://github.com/OrientCOMPASS/MicYou-Voice-Typing/releases/latest/download/opss.voice-typing.zip) |
 | [WhatdidIsay](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay) | [`opss.whatdidisay`](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.whatdidisay) | native | dsp | 0.2.5 |  | config.read, config.write, dsp.node, message.send | [zip](https://github.com/OrientCOMPASS/WhatdidIsay/releases/latest/download/opss.whatdidisay.zip) |
+| [YourMicIsPeaking](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.your-mic-is-peaking) | [`opss.your-mic-is-peaking`](https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.your-mic-is-peaking) | native | dsp | 1.0.0 |  | dsp.node, config.read, config.write | [zip](https://github.com/OrientCOMPASS/your-mic-is-peaking/releases/latest/download/plugin.zip) |
 
 ## 贡献插件
 
