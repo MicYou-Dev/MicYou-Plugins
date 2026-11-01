@@ -1,0 +1,29 @@
+[package]
+name = "micyou-hotkey"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+description = "MicYou native plugin: system-wide hotkeys for mute / monitoring toggles and push-to-talk / push-to-mute on Windows, macOS and Linux"
+publish = false
+
+[lib]
+name = "micyou_hotkey"
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+serde.workspace = true
+serde_json.workspace = true
+crossbeam-channel.workspace = true
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.58", features = [
+    "Win32_Foundation",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_System_Threading",
+] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+evdev = { version = "0.12", default-features = false }
+libc = "0.2"
