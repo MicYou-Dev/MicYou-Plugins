@@ -116,6 +116,48 @@
       ]
     },
     {
+      "id": "opss.hotkey",
+      "name": "Hotkey Control",
+      "nameI18n": {
+        "zh": "快捷键控制",
+        "zh-CN": "快捷键控制",
+        "en": "Hotkey Control"
+      },
+      "version": "0.1.0",
+      "author": "OrientCOMPASS",
+      "description": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture.",
+      "descriptionI18n": {
+        "zh": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
+        "zh-CN": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
+        "en": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture."
+      },
+      "runtime": "native",
+      "kind": "utility",
+      "capabilities": [
+        "control.observe",
+        "control.intercept",
+        "config.read",
+        "config.write"
+      ],
+      "license": "Unlicense",
+      "homepage": "https://github.com/OrientCOMPASS/MicYou-Hotkey",
+      "repository": "https://github.com/OrientCOMPASS/MicYou-Hotkey",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.hotkey/plugin.json",
+      "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Hotkey/releases/latest/download/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.hotkey/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.hotkey",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/MicYou-Hotkey/refs/heads/main/README.md",
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ]
+    },
+    {
       "id": "opss.mambo-rvc-onnx",
       "name": "Mambo RVC ONNX",
       "nameI18n": {
