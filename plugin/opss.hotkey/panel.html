@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="zh">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>快捷键设置 · Hotkey Control</title>
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: 18px 20px 32px;
+    font-family: system-ui, -apple-system, "Segoe UI", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    color: hsl(var(--on-surface, 220 15% 18%));
+    background: transparent;
+    font-size: 14px; line-height: 1.55;
+  }
+  h2 { margin: 0 0 2px; font-size: 17px; display: flex; align-items: center; gap: 8px; }
+  .sub { color: hsl(var(--on-surface-variant, 220 8% 46%)); font-size: 12px; margin-bottom: 16px; }
+  .card {
+    border: 1px solid hsl(var(--outline-variant, 220 13% 85%));
+    background: hsl(var(--surface-container, 220 14% 97%));
+    border-radius: 14px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  .card h3 { margin: 0 0 10px; font-size: 14px; }
+  .rowtop { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  button {
+    border: 1px solid hsl(var(--outline, 220 10% 60%)); background: hsl(var(--surface-bright, 0 0% 100%));
+    color: hsl(var(--on-surface, 220 15% 18%)); padding: 6px 13px; border-radius: 999px;
+    font-size: 13px; cursor: pointer; white-space: nowrap;
+  }
+  button.primary { background: hsl(var(--primary, 230 80% 55%)); color: hsl(var(--on-primary, 0 0% 100%)); border-color: transparent; }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.capturing { background: hsl(var(--error, 0 70% 50%)); color: hsl(var(--on-error, 0 0% 100%)); border-color: transparent; animation: pulse 1.2s infinite; }
+  @keyframes pulse { 50% { opacity: .6; } }
+  .badge {
+    font-size: 11px; padding: 2px 9px; border-radius: 999px;
+    border: 1px solid hsl(var(--outline, 220 10% 60%)); color: hsl(var(--on-surface-variant, 220 8% 46%));
+    white-space: nowrap;
+  }
+  .badge.ok { color: hsl(var(--primary, 230 80% 55%)); border-color: hsl(var(--primary, 230 80% 55%)); }
+  .badge.err { color: hsl(var(--error, 0 70% 50%)); border-color: hsl(var(--error, 0 70% 50%)); }
+  .badge.hot { color: hsl(var(--error, 0 70% 50%)); border-color: hsl(var(--error, 0 70% 50%)); background: hsl(var(--error, 0 70% 50%) / .08); }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px;
+    border: 1px solid hsl(var(--outline-variant, 220 13% 85%)); border-radius: 10px; padding: 4px 10px;
+  }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: hsl(var(--outline, 220 10% 70%)); }
+  .dot.on { background: hsl(var(--error, 0 70% 50%)); }
+  .dot.live { background: hsl(var(--tertiary, 160 70% 40%)); }
+  .detail { margin-top: 8px; font-size: 12px; color: hsl(var(--on-surface-variant, 220 8% 46%)); overflow-wrap: anywhere; }
+  .binding { border-top: 1px solid hsl(var(--outline-variant, 220 13% 88%)); padding: 10px 0 4px; }
+  .binding:first-of-type { border-top: none; }
+  .bhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .bname { font-weight: 600; font-size: 13.5px; }
+  .bhint { color: hsl(var(--on-surface-variant, 220 8% 46%)); font-size: 12px; flex: 1 1 200px; }
+  .combo {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12.5px;
+    background: hsl(var(--surface-dim, 220 14% 92%) / .6); border: 1px solid hsl(var(--outline-variant, 220 13% 85%));
+    border-radius: 8px; padding: 2px 9px; min-width: 90px; display: inline-block; text-align: center;
+  }
+  .combo.live { border-color: hsl(var(--primary, 230 80% 55%)); color: hsl(var(--primary, 230 80% 55%)); font-weight: 600; }
+  .combo.empty { color: hsl(var(--on-surface-variant, 220 8% 60%)); }
+  .bactions { display: flex; gap: 6px; margin: 8px 0 2px; flex-wrap: wrap; }
+  .bactions button { padding: 4px 11px; font-size: 12px; }
+  .errbox {
+    display: none; margin-top: 6px; padding: 7px 11px; border-radius: 9px;
+    background: hsl(var(--error, 0 70% 50%) / .1); color: hsl(var(--error, 0 60% 42%)); font-size: 12px;
+    white-space: pre-wrap; overflow-wrap: anywhere;
+  }
+  .warnbox {
+    display: none; margin-top: 6px; padding: 7px 11px; border-radius: 9px;
+    background: hsl(var(--secondary, 45 90% 45%) / .12); color: hsl(var(--on-surface-variant, 30 40% 35%)); font-size: 12px;
+    overflow-wrap: anywhere;
+  }
+  .switch { display: inline-flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; }
+  .switch input { accent-color: hsl(var(--primary, 230 80% 55%)); width: 16px; height: 16px; }
+  details { margin-top: 4px; }
+  summary { cursor: pointer; color: hsl(var(--on-surface-variant, 220 8% 46%)); font-size: 13px; }
+  details .body { font-size: 12.5px; margin: 8px 0 2px; color: hsl(var(--on-surface-variant, 220 8% 40%)); }
+  details .body li { margin: 4px 0; }
+  code, kbd {
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px;
+    background: hsl(var(--surface-dim, 220 14% 92%) / .6); border-radius: 5px; padding: 1px 5px;
+  }
+  .footer { margin-top: 16px; font-size: 11.5px; color: hsl(var(--on-surface-variant, 220 8% 55%)); overflow-wrap: anywhere; }
+</style>
+</head>
+<body>
+  <h2>⌨️ <span id="title">快捷键控制</span></h2>
+  <div class="sub" id="subTitle">全局快捷键：切换静音 / 耳返监听 · 按住说话 (PTT) · 按住静音 (PTM)</div>
+
+  <!-- ── 状态卡 ── -->
+  <div class="card">
+    <div class="rowtop">
+      <span class="badge" id="engineBadge">…</span>
+      <span class="badge" id="fallbackBadge" style="display:none"></span>
+      <span style="flex:1"></span>
+      <label class="switch"><input type="checkbox" id="chkEnabled" /><span id="lblEnabled">启用快捷键引擎</span></label>
+    </div>
+    <div class="detail" id="engineDetail"></div>
+    <div class="chips">
+      <span class="chip"><span class="dot" id="dotMuted"></span><span id="lblMuted">静音</span>: <b id="vMuted">–</b></span>
+      <span class="chip"><span class="dot" id="dotMon"></span><span id="lblMon">耳返</span>: <b id="vMon">–</b></span>
+      <span class="chip" id="chipPtt" style="display:none"><span class="dot live"></span><span id="lblPttActive">PTT 按住中</span></span>
+      <span class="chip" id="chipPtm" style="display:none"><span class="dot live"></span><span id="lblPtmActive">PTM 按住中</span></span>
+    </div>
+    <div class="warnbox" id="globalWarn"></div>
+  </div>
+
+  <!-- ── 绑定卡 ── -->
+  <div class="card">
+    <h3 id="hBindings">按键绑定</h3>
+    <div id="bindings"></div>
+  </div>
+
+  <!-- ── 选项卡 ── -->
+  <div class="card">
+    <h3 id="hOptions">选项</h3>
+    <label class="switch"><input type="checkbox" id="chkNotify" /><span id="lblNotify">切换时弹系统通知（PTT/PTM 不弹）</span></label>
+  </div>
+
+  <!-- ── 平台说明 ── -->
+  <div class="card">
+    <details>
+      <summary id="sumNotes">平台权限与限制说明</summary>
+      <div class="body" id="notesBody"></div>
+    </details>
+    <details>
+      <summary id="sumSyntax">组合键语法</summary>
+      <div class="body" id="syntaxBody"></div>
+    </details>
+  </div>
+
+  <div class="footer">
+    <span id="vVersion"></span> · <span id="repoLabel">仓库</span>: github.com/OrientCOMPASS/MicYou-Hotkey
+  </div>
+
+<script>
+// ── postMessage bridge (see MicYou usePluginPanelBridge) ─────────────
+function call(api, args) {
+  return new Promise((resolve, reject) => {
+    const id = Math.random().toString(36).slice(2);
+    const onMsg = (e) => {
+      if (e.data && e.data.__micyou === 1 && e.data.id === id) {
+        window.removeEventListener('message', onMsg);
+        e.data.ok ? resolve(e.data.value) : reject(new Error(e.data.error));
+      }
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ __micyou: 1, id, api, args: args || {} }, '*');
+  });
+}
+const $ = (id) => document.getElementById(id);
+
+// ── i18n ──
+const STR = {
+  zh: {
+    title: '快捷键控制',
+    sub: '全局快捷键：切换静音 / 耳返监听 · 按住说话 (PTT) · 按住静音 (PTM)',
+    enabled: '启用快捷键引擎',
+    muted: '静音', monitoring: '耳返', on: '开', off: '关',
+    pttActive: 'PTT 按住中', ptmActive: 'PTM 按住中',
+    hBindings: '按键绑定', hOptions: '选项',
+    notify: '切换时弹系统通知（PTT/PTM 不弹）',
+    sumNotes: '平台权限与限制说明', sumSyntax: '组合键语法', repo: '仓库',
+    capture: '按键捕获', cancel: '取消捕获', use: '使用该组合', clear: '清除', test: '测试',
+    capturingHint: '现在按下目标组合键（或点击鼠标侧键），预览会实时更新；Esc 取消。',
+    unbound: '未绑定',
+    names: {
+      mute: '切换静音', monitor: '切换耳返监听', ptt: '按住说话 Push-to-Talk', ptm: '按住静音 Push-to-Mute',
+    },
+    hints: {
+      mute: '按一次切换静音状态。',
+      monitor: '按一次切换耳返监听（听到自己的声音）。',
+      ptt: '按住期间取消静音，松开恢复（从静音状态开始时 = 经典 PTT）。',
+      ptm: '按住期间强制静音，松开恢复。',
+    },
+    errEmpty: '先按下组合键（或点击鼠标侧键），预览出现后点「使用该组合」。',
+    errBareMain: '无效组合：字母/数字/普通键作主键时必须搭配修饰键；无修饰键时仅支持 F1–F24 与鼠标侧键（mouse4/mouse5）。',
+    errSingleMod: '无效组合：纯修饰键组合至少需要两个修饰键（如 lctrl+lshift），避免误触。',
+    warnHold: '当前引擎不支持「按住」类绑定（缺少按键释放事件或引擎不可用）：此绑定暂不生效。',
+    warnSwallow: 'Linux evdev 捕获不会吞掉按键：热键击键会同时传给前台应用，建议使用鼠标侧键 / F13+ / 纯修饰键组合。',
+    engines: {
+      'windows-hooks': 'Windows 钩子', 'macos-tap': 'macOS 事件tap', 'macos-tap-listen': 'macOS 事件tap(仅监听)',
+      'linux-evdev': 'Linux evdev', 'host-fallback': '宿主快捷键(降级)', unavailable: '不可用',
+      starting: '启动中', stopped: '已停止', disabled: '已停用',
+    },
+    fallbackBadge: '降级模式：仅切换类绑定生效',
+    notes: [
+      '<b>macOS</b>：需要「辅助功能」权限 —— 系统设置 → 隐私与安全性 → 辅助功能 → 勾选 MicYou，然后重启 MicYou。未授权时自动降级为宿主快捷键（仅切换类可用，且按键不吞）。',
+      '<b>Linux</b>：通过内核 evdev 捕获，X11 与 Wayland 均可用。桌面会话通常开箱即用（logind uaccess）；SSH/特殊环境需将用户加入 <code>input</code> 组后重新登录。evdev 为观察模式，按键不会被吞掉。',
+      '<b>Windows</b>：低级钩子全局生效。若前台程序以管理员权限运行而 MicYou 没有，将收不到按键（UIPI 限制），此时请以管理员身份运行 MicYou。',
+      '修改立即生效，无需重启。绑定冲突（两个动作同一组合）会在插件日志中警告。',
+    ],
+    syntax: [
+      '修饰键：<code>ctrl</code> / <code>alt</code> / <code>shift</code> / <code>win</code>（左右均可触发），或 <code>lctrl</code> <code>rctrl</code> <code>lalt</code> <code>ralt</code> <code>lshift</code> <code>rshift</code> <code>lwin</code> <code>rwin</code>（区分左右）',
+      '主键：<code>a</code>-<code>z</code>、<code>0</code>-<code>9</code>、<code>f1</code>-<code>f24</code>、<code>space</code> <code>enter</code> <code>tab</code> <code>esc</code> <code>backspace</code> <code>delete</code> <code>insert</code> <code>home</code> <code>end</code> <code>pageup</code> <code>pagedown</code> <code>up</code> <code>down</code> <code>left</code> <code>right</code> 及标点键；鼠标侧键 <code>mouse4</code>（后退）/ <code>mouse5</code>（前进）',
+      '示例：<code>ctrl+alt+m</code> · <code>lctrl+lshift</code>（纯修饰键）· <code>f13</code> · <code>mouse4</code> · <code>ctrl+mouse5</code>',
+      '规则：字母/数字/普通键必须搭配修饰键；纯修饰键组合至少两个；无修饰键时仅支持 F1–F24 与鼠标侧键。',
+    ],
+  },
+  en: {
+    title: 'Hotkey Control',
+    sub: 'System-wide hotkeys: toggle mute / monitoring · push-to-talk · push-to-mute',
+    enabled: 'Enable hotkey engine',
+    muted: 'Muted', monitoring: 'Monitoring', on: 'on', off: 'off',
+    pttActive: 'PTT held', ptmActive: 'PTM held',
+    hBindings: 'Key bindings', hOptions: 'Options',
+    notify: 'System notification on toggle (not on PTT/PTM)',
+    sumNotes: 'Platform permissions & limits', sumSyntax: 'Combo syntax', repo: 'Repo',
+    capture: 'Capture keys', cancel: 'Cancel capture', use: 'Use this combo', clear: 'Clear', test: 'Test',
+    capturingHint: 'Press the target combination now (or click a mouse side button); the preview updates live. Esc cancels.',
+    unbound: 'unbound',
+    names: {
+      mute: 'Toggle mute', monitor: 'Toggle monitoring', ptt: 'Push-to-Talk', ptm: 'Push-to-Mute',
+    },
+    hints: {
+      mute: 'Each press flips the mute state.',
+      monitor: 'Each press flips ear-return monitoring.',
+      ptt: 'Unmutes while held, restores on release (classic PTT when starting muted).',
+      ptm: 'Mutes while held, restores on release.',
+    },
+    errEmpty: 'Press a combination (or click a mouse side button) first; once the preview shows it, click “Use this combo”.',
+    errBareMain: 'Invalid combo: a letter/digit/ordinary main key requires at least one modifier; bare main keys are limited to F1–F24 and mouse side buttons (mouse4/mouse5).',
+    errSingleMod: 'Invalid combo: modifier-only combos need at least two modifiers (e.g. lctrl+lshift) to avoid accidental triggers.',
+    warnHold: 'The current engine cannot serve hold-style bindings (no key-release events / engine unavailable): this binding is inert.',
+    warnSwallow: 'Linux evdev capture is observe-only: the hotkey keystroke also reaches the focused app. Prefer mouse side buttons / F13+ / modifier-only combos.',
+    engines: {
+      'windows-hooks': 'Windows hooks', 'macos-tap': 'macOS event tap', 'macos-tap-listen': 'macOS tap (listen-only)',
+      'linux-evdev': 'Linux evdev', 'host-fallback': 'Host hotkeys (degraded)', unavailable: 'Unavailable',
+      starting: 'Starting', stopped: 'Stopped', disabled: 'Disabled',
+    },
+    fallbackBadge: 'Degraded mode: toggle bindings only',
+    notes: [
+      '<b>macOS</b>: needs Accessibility permission — System Settings → Privacy & Security → Accessibility → enable MicYou, then restart MicYou. Without it the plugin degrades to host hotkeys (toggles only, no swallowing).',
+      '<b>Linux</b>: kernel evdev capture — works on X11 <i>and</i> Wayland. Normal desktop sessions work out of the box (logind uaccess); for SSH/unusual setups add your user to the <code>input</code> group and re-login. evdev is observe-only: keystrokes are not swallowed.',
+      '<b>Windows</b>: low-level hooks work system-wide. If the foreground app runs elevated while MicYou does not, its input is hidden from us (UIPI) — run MicYou as administrator in that case.',
+      'Changes apply live, no restart needed. Duplicate bindings (same combo on two actions) are warned about in the plugin log.',
+    ],
+    syntax: [
+      'Modifiers: <code>ctrl</code> / <code>alt</code> / <code>shift</code> / <code>win</code> (either side), or <code>lctrl</code> <code>rctrl</code> <code>lalt</code> <code>ralt</code> <code>lshift</code> <code>rshift</code> <code>lwin</code> <code>rwin</code> (side-specific)',
+      'Main keys: <code>a</code>-<code>z</code>, <code>0</code>-<code>9</code>, <code>f1</code>-<code>f24</code>, <code>space</code> <code>enter</code> <code>tab</code> <code>esc</code> <code>backspace</code> <code>delete</code> <code>insert</code> <code>home</code> <code>end</code> <code>pageup</code> <code>pagedown</code> <code>up</code> <code>down</code> <code>left</code> <code>right</code> and punctuation; mouse side buttons <code>mouse4</code> (back) / <code>mouse5</code> (forward)',
+      'Examples: <code>ctrl+alt+m</code> · <code>lctrl+lshift</code> (modifier-only) · <code>f13</code> · <code>mouse4</code> · <code>ctrl+mouse5</code>',
+      'Rules: letters/digits/ordinary keys need a modifier; modifier-only combos need ≥2 modifiers; bare main keys are limited to F1–F24 and mouse4/mouse5.',
+    ],
+  },
+};
+let t = STR.zh;
+let cfg = {};        // last config snapshot
+let status = null;   // parsed status mirror
+let locale = 'zh';
+
+const SLOTS = [
+  { slot: 'mute',    key: 'muteHotkey' },
+  { slot: 'monitor', key: 'monitorHotkey' },
+  { slot: 'ptt',     key: 'pttHotkey' },
+  { slot: 'ptm',     key: 'ptmHotkey' },
+];
+
+// ── hotkey capture (sticky preview; adapted from Voice-Typing) ──
+let captureSlot = null;          // which binding row is capturing
+const held = new Set();          // e.code values currently held
+let stickyMouseMain = null;      // 'mouse4' | 'mouse5'
+let pending = null;              // { mods: [tok], main: tok|null }
+
+const MOD_ORDER = [
+  ['ControlLeft', 'lctrl'], ['ControlRight', 'rctrl'],
+  ['AltLeft', 'lalt'], ['AltRight', 'ralt'],
+  ['ShiftLeft', 'lshift'], ['ShiftRight', 'rshift'],
+  ['MetaLeft', 'lwin'], ['MetaRight', 'rwin'],
+];
+
+function mainToken(code) {
+  if (/^Key[A-Z]$/.test(code)) return code.slice(3).toLowerCase();
+  if (/^Digit[0-9]$/.test(code)) return code.slice(5);
+  if (/^F([1-9]|1[0-9]|2[0-4])$/.test(code)) return code.toLowerCase();
+  const map = {
+    Space: 'space', Enter: 'enter', NumpadEnter: 'enter', Tab: 'tab',
+    Backspace: 'backspace', Delete: 'delete', Insert: 'insert',
+    Home: 'home', End: 'end', PageUp: 'pageup', PageDown: 'pagedown',
+    ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right',
+    Minus: 'minus', Equal: 'equal', BracketLeft: 'bracketleft', BracketRight: 'bracketright',
+    Backslash: 'backslash', Semicolon: 'semicolon', Quote: 'quote',
+    Comma: 'comma', Period: 'period', Slash: 'slash', Backquote: 'backquote',
+    Pause: 'pause',
+  };
+  return map[code] || null;
+}
+function isModCode(code) { return MOD_ORDER.some(([c]) => c === code); }
+function heldMods() { return MOD_ORDER.filter(([c]) => held.has(c)).map(([, tok]) => tok); }
+function heldKeyMain() {
+  for (const code of held) {
+    if (!isModCode(code)) {
+      const tok = mainToken(code);
+      if (tok) return tok;
+    }
+  }
+  return null;
+}
+function comboString(p) { return [...p.mods, ...(p.main ? [p.main] : [])].join('+'); }
+function validate(p) {
+  if (!p) return t.errEmpty;
+  if (p.mods.length === 0 && !p.main) return t.errEmpty;
+  if (p.main) {
+    const bareOk = /^f([1-9]|1[0-9]|2[0-4])$/.test(p.main) || p.main === 'mouse4' || p.main === 'mouse5';
+    if (p.mods.length === 0 && !bareOk) return t.errBareMain;
+  } else if (p.mods.length < 2) {
+    return t.errSingleMod;
+  }
+  return null;
+}
+function snapshot() {
+  pending = { mods: heldMods(), main: heldKeyMain() || stickyMouseMain };
+  updatePreview();
+}
+function rowEl(slot, cls) { return document.querySelector(`#bind-${slot} ${cls}`); }
+function updatePreview() {
+  if (!captureSlot) return;
+  const view = rowEl(captureSlot, '.combo');
+  const errBox = rowEl(captureSlot, '.errbox');
+  const useBtn = rowEl(captureSlot, '.use');
+  const str = pending ? comboString(pending) : '';
+  view.textContent = str || '…';
+  view.classList.add('live');
+  const err = pending ? validate(pending) : null;
+  errBox.style.display = err ? 'block' : 'none';
+  if (err) errBox.textContent = err;
+  useBtn.style.display = '';
+  useBtn.disabled = !pending || !!validate(pending);
+}
+function onCaptureDown(e) {
+  e.preventDefault(); e.stopPropagation();
+  if (e.code === 'Escape') { exitCaptureMode(); return; }
+  held.add(e.code);
+  if (!isModCode(e.code) && mainToken(e.code)) stickyMouseMain = null;
+  snapshot();
+}
+function onCaptureUp(e) {
+  e.preventDefault(); e.stopPropagation();
+  held.delete(e.code);
+  // Sticky preview: candidate survives key-up so the user can click "Use".
+}
+function onCaptureMouse(e) {
+  if (e.button !== 3 && e.button !== 4) return; // keep normal clicks usable
+  e.preventDefault(); e.stopPropagation();
+  stickyMouseMain = e.button === 3 ? 'mouse4' : 'mouse5';
+  for (const c of Array.from(held)) {
+    if (!isModCode(c)) held.delete(c);
+  }
+  snapshot();
+}
+function onCaptureBlur() { held.clear(); }
+function enterCaptureMode(slot) {
+  if (captureSlot && captureSlot !== slot) exitCaptureMode(false);
+  captureSlot = slot;
+  held.clear(); stickyMouseMain = null; pending = null;
+  const capBtn = rowEl(slot, '.capture');
+  capBtn.textContent = t.cancel;
+  capBtn.classList.add('capturing');
+  rowEl(slot, '.bhint').textContent = t.capturingHint;
+  updatePreview();
+  window.addEventListener('keydown', onCaptureDown, true);
+  window.addEventListener('keyup', onCaptureUp, true);
+  window.addEventListener('mousedown', onCaptureMouse, true);
+  window.addEventListener('blur', onCaptureBlur);
+}
+function exitCaptureMode(rerender = true) {
+  if (!captureSlot) return;
+  const slot = captureSlot;
+  captureSlot = null;
+  held.clear(); stickyMouseMain = null; pending = null;
+  window.removeEventListener('keydown', onCaptureDown, true);
+  window.removeEventListener('keyup', onCaptureUp, true);
+  window.removeEventListener('mousedown', onCaptureMouse, true);
+  window.removeEventListener('blur', onCaptureBlur);
+  if (rerender) render();
+}
+async function commitHotkey() {
+  const slot = captureSlot;
+  if (!slot) return;
+  const err = validate(pending);
+  if (err) return;
+  const def = SLOTS.find((s) => s.slot === slot);
+  const str = comboString(pending);
+  exitCaptureMode(false);
+  try {
+    await call('set_config', { key: def.key, value: str });
+    // config:changed is broadcast by the host on set_plugin_config; the
+    // explicit trigger is a belt-and-braces fallback.
+    await call('trigger', { action: 'apply' });
+  } catch (e) { console.warn(e); }
+  await refresh();
+}
+async function clearBinding(slot) {
+  const def = SLOTS.find((s) => s.slot === slot);
+  try {
+    await call('set_config', { key: def.key, value: '' });
+    await call('trigger', { action: 'apply' });
+  } catch (e) { console.warn(e); }
+  await refresh();
+}
+async function testBinding(slot) {
+  try {
+    await call('trigger', { action: 'test', payload: JSON.stringify({ slot }) });
+    await refresh();
+  } catch (e) { console.warn(e); }
+}
+
+// ── rendering ──
+function buildBindings() {
+  const host = $('bindings');
+  host.innerHTML = '';
+  for (const { slot } of SLOTS) {
+    const div = document.createElement('div');
+    div.className = 'binding';
+    div.id = `bind-${slot}`;
+    div.innerHTML = `
+      <div class="bhead">
+        <span class="bname"></span>
+        <span class="combo empty">–</span>
+        <span class="bhint"></span>
+      </div>
+      <div class="bactions">
+        <button class="capture"></button>
+        <button class="primary use" style="display:none"></button>
+        <button class="clear"></button>
+        <button class="test"></button>
+      </div>
+      <div class="errbox"></div>
+      <div class="warnbox rowwarn"></div>`;
+    div.querySelector('.capture').addEventListener('click', () => {
+      captureSlot === slot ? exitCaptureMode() : enterCaptureMode(slot);
+    });
+    div.querySelector('.use').addEventListener('click', commitHotkey);
+    div.querySelector('.clear').addEventListener('click', () => clearBinding(slot));
+    div.querySelector('.test').addEventListener('click', () => testBinding(slot));
+    host.appendChild(div);
+  }
+}
+
+function renderStatic() {
+  $('title').textContent = t.title;
+  $('subTitle').textContent = t.sub;
+  $('lblEnabled').textContent = t.enabled;
+  $('lblMuted').textContent = t.muted;
+  $('lblMon').textContent = t.monitoring;
+  $('lblPttActive').textContent = t.pttActive;
+  $('lblPtmActive').textContent = t.ptmActive;
+  $('hBindings').textContent = t.hBindings;
+  $('hOptions').textContent = t.hOptions;
+  $('lblNotify').textContent = t.notify;
+  $('sumNotes').textContent = t.sumNotes;
+  $('sumSyntax').textContent = t.sumSyntax;
+  $('repoLabel').textContent = t.repo;
+  $('notesBody').innerHTML = '<ul>' + t.notes.map((n) => `<li>${n}</li>`).join('') + '</ul>';
+  $('syntaxBody').innerHTML = '<ul>' + t.syntax.map((n) => `<li>${n}</li>`).join('') + '</ul>';
+  for (const { slot } of SLOTS) {
+    const el = document.querySelector(`#bind-${slot}`);
+    el.querySelector('.bname').textContent = t.names[slot];
+    el.querySelector('.capture').textContent = t.capture;
+    el.querySelector('.use').textContent = t.use;
+    el.querySelector('.clear').textContent = t.clear;
+    el.querySelector('.test').textContent = t.test;
+  }
+}
+
+function engineLabel(e) { return t.engines[e] || e; }
+
+function render() {
+  const st = status || {};
+  // engine badge
+  const badge = $('engineBadge');
+  const engine = st.engine || 'starting';
+  badge.textContent = engineLabel(engine);
+  badge.className = 'badge ' + (
+    engine === 'unavailable' || engine === 'stopped' ? 'err'
+      : engine === 'disabled' ? ''
+        : engine === 'starting' ? '' : 'ok');
+  $('engineDetail').textContent = st.detail || '';
+  // fallback badge
+  const fb = $('fallbackBadge');
+  fb.style.display = st.fallbackActive ? '' : 'none';
+  fb.textContent = t.fallbackBadge;
+  fb.className = 'badge err';
+  // master switch (don't fight the user mid-click)
+  if (document.activeElement !== $('chkEnabled')) $('chkEnabled').checked = st.enabled !== false;
+  if (document.activeElement !== $('chkNotify')) $('chkNotify').checked = !!cfg.notifyChanges;
+  // live state chips
+  $('vMuted').textContent = st.muted ? t.on : t.off;
+  $('dotMuted').className = 'dot' + (st.muted ? ' on' : '');
+  $('vMon').textContent = st.monitoring ? t.on : t.off;
+  $('dotMon').className = 'dot' + (st.monitoring ? ' live' : '');
+  $('chipPtt').style.display = st.pttActive ? '' : 'none';
+  $('chipPtm').style.display = st.ptmActive ? '' : 'none';
+  // global warnings
+  const gw = $('globalWarn');
+  const isLinux = (st.detail || '').includes('/dev/input') || engine === 'linux-evdev';
+  gw.style.display = engine === 'linux-evdev' ? 'block' : 'none';
+  gw.textContent = t.warnSwallow;
+  // bindings
+  for (const { slot } of SLOTS) {
+    const el = document.querySelector(`#bind-${slot}`);
+    const b = (st.bindings && st.bindings[slot]) || {};
+    const view = el.querySelector('.combo');
+    if (captureSlot !== slot) {
+      const text = b.effective || b.raw || '';
+      view.textContent = text || t.unbound;
+      view.className = 'combo' + (text ? '' : ' empty');
+      el.querySelector('.bhint').textContent = t.hints[slot];
+      const errBox = el.querySelector('.errbox');
+      const err = b.error || '';
+      errBox.style.display = err ? 'block' : 'none';
+      errBox.textContent = err;
+      el.querySelector('.use').style.display = 'none';
+      el.querySelector('.capture').textContent = t.capture;
+      el.querySelector('.capture').classList.remove('capturing');
+    }
+    // hold bindings need release events from a native backend
+    const warn = el.querySelector('.rowwarn');
+    const holdBroken = (slot === 'ptt' || slot === 'ptm') && (b.effective || b.raw) && st.holdSupported === false;
+    warn.style.display = holdBroken ? 'block' : 'none';
+    warn.textContent = t.warnHold;
+    el.querySelector('.test').disabled = !(b.effective || b.raw);
+  }
+  $('vVersion').textContent = 'v' + (st.version || cfg.version || '?');
+}
+
+async function refresh() {
+  try {
+    cfg = await call('get_config', {});
+    if (cfg && cfg.status && typeof cfg.status === 'object') status = cfg.status;
+    else if (typeof cfg.status === 'string' && cfg.status) {
+      try { status = JSON.parse(cfg.status); } catch { /* keep last */ }
+    }
+  } catch (e) { /* panel may open before bridge is ready */ }
+  render();
+}
+
+async function init() {
+  try {
+    locale = (await call('locale', {})) || 'zh';
+  } catch { locale = 'zh'; }
+  t = String(locale).toLowerCase().startsWith('en') ? STR.en : STR.zh;
+  document.documentElement.lang = t === STR.en ? 'en' : 'zh';
+  buildBindings();
+  renderStatic();
+  await refresh();
+  // Poll the status mirror while the panel is open.
+  let busy = false;
+  setInterval(async () => {
+    if (busy || captureSlot) return;
+    busy = true;
+    await refresh();
+    busy = false;
+  }, 700);
+}
+
+$('chkEnabled').addEventListener('change', async (e) => {
+  try { await call('set_config', { key: 'enabled', value: e.target.checked }); } catch (err) { console.warn(err); }
+  await refresh();
+});
+$('chkNotify').addEventListener('change', async (e) => {
+  try { await call('set_config', { key: 'notifyChanges', value: e.target.checked }); } catch (err) { console.warn(err); }
+});
+
+init();
+</script>
+</body>
+</html>

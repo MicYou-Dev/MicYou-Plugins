@@ -1,0 +1,120 @@
+{
+  "id": "opss.hotkey",
+  "name": "Hotkey Control",
+  "version": "0.1.0",
+  "author": "OrientCOMPASS",
+  "description": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture.",
+  "descriptionI18n": {
+    "zh": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
+    "zh-CN": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
+    "en": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture."
+  },
+  "nameI18n": {
+    "zh": "快捷键控制",
+    "zh-CN": "快捷键控制",
+    "en": "Hotkey Control"
+  },
+  "license": "Unlicense",
+  "runtime": "native",
+  "entry": "micyou_hotkey",
+  "platforms": [
+    "windows",
+    "linux",
+    "macos"
+  ],
+  "arches": [
+    "x86_64",
+    "aarch64"
+  ],
+  "apiVersion": 2,
+  "capabilities": [
+    "control.observe",
+    "control.intercept",
+    "config.read",
+    "config.write"
+  ],
+  "kind": "utility",
+  "ui": {
+    "route": "panel",
+    "label": "快捷键",
+    "panels": [
+      {
+        "id": "settings",
+        "label": "快捷键设置",
+        "entry": "panel.html"
+      }
+    ]
+  },
+  "keywords": [
+    "hotkey",
+    "shortcut",
+    "keyboard",
+    "push-to-talk",
+    "ptt",
+    "push-to-mute",
+    "mute",
+    "monitoring",
+    "global",
+    "wayland"
+  ],
+  "config": {
+    "enabled": true,
+    "muteHotkey": "ctrl+alt+m",
+    "monitorHotkey": "ctrl+alt+e",
+    "pttHotkey": "",
+    "ptmHotkey": "",
+    "notifyChanges": false,
+    "status": {}
+  },
+  "configSchema": {
+    "fields": [
+      {
+        "key": "enabled",
+        "fieldType": "boolean",
+        "label": "启用快捷键引擎 Enabled",
+        "description": "总开关。关闭后所有绑定失效（面板中的测试按钮仍可验证宿主控制链路）。修改后立即生效。",
+        "default": true
+      },
+      {
+        "key": "muteHotkey",
+        "fieldType": "string",
+        "label": "切换静音 Toggle mute",
+        "description": "按一次切换静音。用 + 连接修饰键与主键。修饰键：ctrl/alt/shift/win（左右均可触发）或 lctrl/rctrl/lalt/ralt/lshift/rshift/lwin/rwin（区分左右）；主键：a-z、0-9、f1-f24、space、enter 等键盘键，以及鼠标侧键 mouse4/mouse5。示例：ctrl+alt+m（默认）、lctrl+lshift（纯修饰键组合）、f13、mouse4。规则：字母/数字/普通键作主键时必须搭配修饰键；纯修饰键组合至少两个修饰键；单独使用（无修饰键）仅支持 F1-F24 与鼠标侧键。留空 = 停用该绑定。也可在插件专属设置页用「按键捕获」直接录入。",
+        "default": "ctrl+alt+m"
+      },
+      {
+        "key": "monitorHotkey",
+        "fieldType": "string",
+        "label": "切换耳返监听 Toggle monitoring",
+        "description": "按一次切换耳返监听（听到自己的声音）。格式同「切换静音」。留空 = 停用该绑定。",
+        "default": "ctrl+alt+e"
+      },
+      {
+        "key": "pttHotkey",
+        "fieldType": "string",
+        "label": "按住说话 Push-to-Talk",
+        "description": "按住期间取消静音，松开恢复原状态（原本已静音时：按住说话、松开回到静音；原本未静音时按键不影响状态）。需要按键释放事件，仅原生捕获后端支持（Windows/macOS/Linux 均可；macOS 需授予辅助功能权限，Linux 需可读取 /dev/input）。格式同上。留空 = 停用。推荐鼠标侧键或纯修饰键组合（Linux 上按键不会被吞掉，普通键会同时传给前台应用）。",
+        "default": ""
+      },
+      {
+        "key": "ptmHotkey",
+        "fieldType": "string",
+        "label": "按住静音 Push-to-Mute",
+        "description": "按住期间强制静音，松开恢复原状态（与 Push-to-Talk 相反）。需要按键释放事件，限制同上。留空 = 停用。",
+        "default": ""
+      },
+      {
+        "key": "notifyChanges",
+        "fieldType": "boolean",
+        "label": "切换时系统通知 Notify on toggle",
+        "description": "快捷键触发静音/耳返切换时弹出系统通知（按住说话/按住静音不弹，避免刷屏）。",
+        "default": false
+      }
+    ]
+  },
+  "repository": "https://github.com/OrientCOMPASS/MicYou-Hotkey",
+  "homepage": "https://github.com/OrientCOMPASS/MicYou-Hotkey",
+  "updateUrl": "https://github.com/OrientCOMPASS/MicYou-Hotkey/releases/latest/download/plugin.json",
+  "downloadUrl": "https://github.com/OrientCOMPASS/MicYou-Hotkey/releases/latest/download/plugin.zip",
+  "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/MicYou-Hotkey/refs/heads/main/README.md"
+}

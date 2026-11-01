@@ -1,0 +1,34 @@
+# Workspace root for the MicYou "Hotkey Control" plugin (opss.hotkey).
+#
+# Members:
+#   plugin/   — the MicYou native plugin (cdylib, C ABI v1 / Host API v2)
+#
+# The distributed plugin.zip is assembled by CI
+# (.github/workflows/release.yml) — one zip carries all three desktop
+# platform binaries at its root (micyou_hotkey.dll / .so / .dylib).
+
+[workspace]
+members = ["plugin"]
+resolver = "2"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+# `#[unsafe(no_mangle)]` (used at the FFI boundary) requires rustc >= 1.88.
+rust-version = "1.88"
+license = "Unlicense"
+publish = false
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+crossbeam-channel = "0.5"
+
+[profile.release]
+opt-level = 2
+lto = "thin"
+codegen-units = 1
+strip = true
+# NOTE: never set panic = "abort" here — the `plugin` cdylib runs *inside the
+# MicYou host process*; abort would take the whole application down. Unwinding
+# lets lib.rs's catch_unwind keep plugin panics from crossing the FFI boundary.
