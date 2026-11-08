@@ -1,0 +1,82 @@
+{
+  "id": "opss.dsp-diagnose",
+  "name": "DSP Diagnose",
+  "nameI18n": {
+    "en": "DSP Diagnose",
+    "zh": "DSP 录音诊断",
+    "zh-CN": "DSP 录音诊断"
+  },
+  "version": "1.0.2",
+  "description": "Records the audio received at each DSP node position to timestamped WAV files for chain diagnostics.",
+  "descriptionI18n": {
+    "en": "Records the audio received at each DSP node position to timestamped WAV files for chain diagnostics.",
+    "zh": "把每个 DSP 节点位置收到的音频录成带时间戳的 WAV 文件，用于排查处理链问题。",
+    "zh-CN": "把每个 DSP 节点位置收到的音频录成带时间戳的 WAV 文件，用于排查处理链问题。"
+  },
+  "license": "Unlicense",
+  "runtime": "native",
+  "entry": "dsp_diagnose",
+  "platforms": [
+    "windows",
+    "linux",
+    "macos"
+  ],
+  "arches": [
+    "x86_64",
+    "aarch64"
+  ],
+  "apiVersion": 2,
+  "minHostVersion": "2.1.1",
+  "capabilities": [
+    "dsp.node",
+    "config.read",
+    "config.write",
+    "control.observe",
+    "control.intercept",
+    "open.url"
+  ],
+  "kind": "dsp",
+  "dsp": {
+    "insertAfter": "Equalizer",
+    "realtimeSafe": true,
+    "allowMultipleNodes": true
+  },
+  "ui": {
+    "route": "panel",
+    "label": "DSP Diagnose",
+    "panels": [
+      {
+        "id": "diagnose",
+        "label": "DSP Diagnose",
+        "entry": "panel.html"
+      }
+    ]
+  },
+  "config": {
+    "nodeCount": 1,
+    "nodes": [
+      {
+        "name": "node-1",
+        "enabled": true
+      }
+    ],
+    "outputDir": "",
+    "segmentSeconds": 1800,
+    "bits": 16,
+    "autoStart": true,
+    "status": {}
+  },
+  "keywords": [
+    "dsp",
+    "diagnose",
+    "recording",
+    "wav",
+    "audio-chain",
+    "debug"
+  ],
+  "repository": "https://github.com/OrientCOMPASS/DSP-Diagnose",
+  "homepage": "https://github.com/OrientCOMPASS/DSP-Diagnose",
+  "updateUrl": "https://github.com/OrientCOMPASS/DSP-Diagnose/releases/latest/download/plugin.json",
+  "downloadUrl": "https://github.com/OrientCOMPASS/DSP-Diagnose/releases/latest/download/plugin.zip",
+  "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/DSP-Diagnose/refs/heads/main/README.md"
+}
