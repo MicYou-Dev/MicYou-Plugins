@@ -77,6 +77,50 @@
       ]
     },
     {
+      "id": "opss.dsp-diagnose",
+      "name": "DSP Diagnose",
+      "nameI18n": {
+        "en": "DSP Diagnose",
+        "zh": "DSP 录音诊断",
+        "zh-CN": "DSP 录音诊断"
+      },
+      "version": "1.0.2",
+      "author": "",
+      "description": "Records the audio received at each DSP node position to timestamped WAV files for chain diagnostics.",
+      "descriptionI18n": {
+        "en": "Records the audio received at each DSP node position to timestamped WAV files for chain diagnostics.",
+        "zh": "把每个 DSP 节点位置收到的音频录成带时间戳的 WAV 文件，用于排查处理链问题。",
+        "zh-CN": "把每个 DSP 节点位置收到的音频录成带时间戳的 WAV 文件，用于排查处理链问题。"
+      },
+      "runtime": "native",
+      "kind": "dsp",
+      "capabilities": [
+        "dsp.node",
+        "config.read",
+        "config.write",
+        "control.observe",
+        "control.intercept",
+        "open.url"
+      ],
+      "license": "Unlicense",
+      "homepage": "https://github.com/OrientCOMPASS/DSP-Diagnose",
+      "repository": "https://github.com/OrientCOMPASS/DSP-Diagnose",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.dsp-diagnose/plugin.json",
+      "downloadUrl": "https://github.com/OrientCOMPASS/DSP-Diagnose/releases/latest/download/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/opss.dsp-diagnose/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/opss.dsp-diagnose",
+      "readmeUrl": "https://raw.githubusercontent.com/OrientCOMPASS/DSP-Diagnose/refs/heads/main/README.md",
+      "arches": [
+        "x86_64",
+        "aarch64"
+      ],
+      "platforms": [
+        "windows",
+        "linux",
+        "macos"
+      ]
+    },
+    {
       "id": "opss.focus-capture",
       "name": "FocusCapture",
       "nameI18n": {
