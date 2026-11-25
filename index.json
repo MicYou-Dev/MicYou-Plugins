@@ -4,6 +4,43 @@
   "updatedAt": "2026-08-08T00:00:00.000Z",
   "plugins": [
     {
+      "id": "dev.denlist.voicekey",
+      "name": "VoiceKey — 语音自动按键",
+      "nameI18n": {
+        "zh": "VoiceKey — 语音自动按键",
+        "zh-CN": "VoiceKey — 语音自动按键",
+        "en": "VoiceKey — Auto Key Press"
+      },
+      "version": "1.1.1",
+      "author": "Denlist",
+      "description": "Automatically hold a configurable key combo (default Ctrl+Win) while phone audio is detected, so WeChat/Sogou voice typing enters push-to-talk mode hands-free.",
+      "descriptionI18n": {
+        "zh": "检测到手机音频时自动按住可配置按键（默认 Ctrl+Win），让微信输入法等语音输入在免提状态下进入「按住说话」，说完自动松开。",
+        "en": "Automatically hold a configurable key combo (default Ctrl+Win) while phone audio is detected, so voice input such as WeChat/Sogou typing enters push-to-talk mode hands-free."
+      },
+      "runtime": "native",
+      "kind": "utility",
+      "capabilities": [
+        "audio.state",
+        "config.read",
+        "config.write"
+      ],
+      "license": "Unlicense",
+      "homepage": "https://github.com/Denlist/MicYou-VoiceKey",
+      "repository": "https://github.com/Denlist/MicYou-VoiceKey",
+      "manifestUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.denlist.voicekey/plugin.json",
+      "downloadUrl": "https://github.com/Denlist/MicYou-VoiceKey/releases/latest/download/plugin.zip",
+      "previewUrl": "https://micyou-dev.github.io/MicYou-Plugins/plugin/dev.denlist.voicekey/preview.png",
+      "pageUrl": "https://github.com/MicYou-Dev/MicYou-Plugins/tree/main/plugin/dev.denlist.voicekey",
+      "readmeUrl": "https://raw.githubusercontent.com/Denlist/MicYou-VoiceKey/main/README.md",
+      "arches": [
+        "x86_64"
+      ],
+      "platforms": [
+        "windows"
+      ]
+    },
+    {
       "id": "dev.micyou.example.audioinspector",
       "name": "Example: Audio Inspector",
       "nameI18n": {
