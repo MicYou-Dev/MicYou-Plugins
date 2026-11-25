@@ -1,0 +1,64 @@
+{
+  "id": "dev.denlist.voicekey",
+  "name": "VoiceKey — 语音自动按键",
+  "version": "1.1.1",
+  "author": "Denlist",
+  "description": "Automatically hold a configurable key combo (default Ctrl+Win) while phone audio is detected, so WeChat/Sogou voice typing enters push-to-talk mode hands-free.",
+  "nameI18n": {
+    "zh": "VoiceKey — 语音自动按键",
+    "zh-CN": "VoiceKey — 语音自动按键",
+    "en": "VoiceKey — Auto Key Press"
+  },
+  "descriptionI18n": {
+    "zh": "检测到手机音频时自动按住可配置按键（默认 Ctrl+Win），让微信输入法等语音输入在免提状态下进入「按住说话」，说完自动松开。",
+    "en": "Automatically hold a configurable key combo (default Ctrl+Win) while phone audio is detected, so voice input such as WeChat/Sogou typing enters push-to-talk mode hands-free."
+  },
+  "runtime": "native",
+  "entry": "voicekey.dll",
+  "kind": "utility",
+  "platforms": ["windows"],
+  "arches": ["x86_64"],
+  "api_version": 2,
+  "capabilities": ["audio.state", "config.read", "config.write"],
+  "license": "Unlicense",
+  "homepage": "https://github.com/Denlist/MicYou-VoiceKey",
+  "repository": "https://github.com/Denlist/MicYou-VoiceKey",
+  "updateUrl": "https://github.com/Denlist/MicYou-VoiceKey/releases/latest/download/plugin.json",
+  "downloadUrl": "https://github.com/Denlist/MicYou-VoiceKey/releases/latest/download/plugin.zip",
+  "readmeUrl": "https://raw.githubusercontent.com/Denlist/MicYou-VoiceKey/main/README.md",
+  "keywords": ["voice", "voice-typing", "hotkey", "vad", "sendinput", "wechat", "wetype", "语音输入", "微信输入法"],
+  "ui": {
+    "route": "plugin-panel",
+    "label": "VoiceKey",
+    "entry": "panel.html",
+    "panels": [
+      { "id": "main", "label": "VoiceKey", "entry": "panel.html", "sidebar": true }
+    ]
+  },
+  "config": {
+    "enabled": true,
+    "keys": "ctrl+win",
+    "threshold": 0.015,
+    "silenceMs": 1000,
+    "minHoldMs": 700,
+    "maxHoldMs": 60000,
+    "startDelayMs": 120,
+    "cooldownMs": 800,
+    "injectMode": "vk",
+    "onlyWhenStreaming": true
+  },
+  "configSchema": {
+    "fields": [
+      { "key": "enabled", "fieldType": "boolean", "label": "启用插件", "default": true },
+      { "key": "keys", "fieldType": "string", "label": "绑定按键", "default": "ctrl+win", "description": "触发语音输入的组合键，例如 ctrl+win" },
+      { "key": "threshold", "fieldType": "number", "label": "语音电平阈值", "default": 0.015, "min": 0, "max": 1, "step": 0.001 },
+      { "key": "silenceMs", "fieldType": "number", "label": "静音判定(ms)", "default": 1000, "min": 100, "max": 10000, "step": 50 },
+      { "key": "minHoldMs", "fieldType": "number", "label": "最短按住(ms)", "default": 700, "min": 0, "max": 5000, "step": 50 },
+      { "key": "maxHoldMs", "fieldType": "number", "label": "最长按住(ms)", "default": 60000, "min": 1000, "max": 600000, "step": 500 },
+      { "key": "startDelayMs", "fieldType": "number", "label": "开始延迟(ms)", "default": 120, "min": 0, "max": 2000, "step": 10 },
+      { "key": "cooldownMs", "fieldType": "number", "label": "冷却时间(ms)", "default": 800, "min": 0, "max": 5000, "step": 50 },
+      { "key": "injectMode", "fieldType": "select", "label": "按键注入方式", "default": "vk", "options": [ { "value": "vk", "label": "虚拟键码 (VK)" }, { "value": "scan", "label": "扫描码 (ScanCode)" } ] },
+      { "key": "onlyWhenStreaming", "fieldType": "boolean", "label": "仅在音频流时触发", "default": true }
+    ]
+  }
+}
