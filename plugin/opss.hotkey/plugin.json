@@ -2,7 +2,6 @@
   "id": "opss.hotkey",
   "name": "Hotkey Control",
   "version": "0.1.0",
-  "author": "OrientCOMPASS",
   "description": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture.",
   "descriptionI18n": {
     "zh": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
