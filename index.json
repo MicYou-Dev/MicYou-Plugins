@@ -205,7 +205,7 @@
         "en": "Hotkey Control"
       },
       "version": "0.1.0",
-      "author": "OrientCOMPASS",
+      "author": "",
       "description": "System-wide hotkeys to control MicYou: toggle mute / monitoring, plus push-to-talk and push-to-mute. Works on Windows, macOS and Linux (X11 & Wayland) with per-platform native input capture.",
       "descriptionI18n": {
         "zh": "全局快捷键控制 MicYou：一键切换静音 / 耳返监听，支持按住说话 (Push-to-Talk) 与按住静音 (Push-to-Mute)。Windows、macOS、Linux（X11 与 Wayland）三平台原生按键捕获，组合键完全自定义。",
@@ -283,7 +283,7 @@
         "en": "Soundpad"
       },
       "version": "1.0.0",
-      "author": "OrientCOMPASS",
+      "author": "",
       "description": "Phone-controlled soundpad: play sounds (WAV / MP3 / FLAC / OGG / M4A) from a customizable sounds directory, mixed into the MicYou mic stream. Multi-voice, with per-session volume / seek / loop driven from the MicYou Android app, plus optional local headphone playback (instantly yielding to the host ear-return), per-sound volume memory and a VAD anti-collision guard that ducks sounds while you speak.",
       "descriptionI18n": {
         "zh": "手机遥控 Soundpad：播放自定义音效目录（支持子文件夹分类）中的音频（WAV/MP3/FLAC/OGG/M4A）并混入 MicYou 麦克风流。多音效同播，安卓端可控进度/音量/循环；耳机直接出声（宿主监听开启时即时让位）、按音效记忆音量、VAD 防撞（说话时音效自动压低）。",
