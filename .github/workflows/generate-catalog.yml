@@ -5,12 +5,22 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# contents: write → git-auto-commit-action 回写 index.json / README.md
+# pages / id-token → Pages 部署
+# actions: read     → deploy-pages 要在同一 run 内列出 github-pages artifact
 permissions:
   contents: write
   pages: write
   id-token: write
+  actions: read
+
+# 同分支连续 push 时把 Pages 部署串行化，避免两次部署互相覆盖
+concurrency:
+  group: pages
+  cancel-in-progress: false
 
 jobs:
+  # 只负责生成清单与产物上传，不碰部署
   generate:
     runs-on: ubuntu-latest
     steps:
@@ -30,6 +40,17 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site
+
+  # 独立 job 部署：upload-pages-artifact 完成、artifact 元数据可查询后再取
+  # 清单。此前上传与部署挤在同一 job，deploy-pages 会偶发
+  # "Found 0 artifact(s)"（run 45545928784）
+  deploy:
+    needs: generate
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy Pages
         id: deployment
         uses: actions/deploy-pages@v4
