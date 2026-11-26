@@ -194,8 +194,27 @@ pub fn apply_state(theme: &LoadedTheme, st: &StatePayload, smooth: f64) {
     set("session-text", Value::String(st.session_text.clone().into()));
     set("device-label", Value::String(st.device_label.clone().into()));
     set("device-mode", Value::String(st.device_mode.clone().into()));
+    // 电量：只有 0..=100 才认为有效，主题用 battery-visible 控制显隐
+    let battery = st
+        .battery_level
+        .filter(|level| (0..=100).contains(level));
+    set("battery-visible", Value::Bool(battery.is_some()));
+    set(
+        "battery-level",
+        Value::Number(battery.map_or(-1, |level| level) as f64),
+    );
+    set(
+        "battery-charging",
+        Value::Bool(battery.is_some() && st.battery_charging),
+    );
+    set("battery-text", Value::String(battery_text(battery).into()));
     set("info-text", Value::String(info_text(st).into()));
     set("arc-path", Value::String(crate::arc::arc_path(smooth).into()));
+}
+
+/// Pre-formatted battery label; themes cannot format numbers in expressions.
+fn battery_text(level: Option<i32>) -> String {
+    level.map_or(String::new(), |level| format!("{level}%"))
 }
 
 /// Pre-formatted stream summary for themes that want text but can't convert
@@ -259,6 +278,13 @@ mod tests {
             // Every theme must at least accept the core state and fire mute.
             for p in ["muted", "streaming", "input-level"] {
                 assert!(props.contains(p), "{name} missing property {p}");
+            }
+            // Bundled themes that show the phone battery must declare the whole
+            // family, otherwise the indicator silently disappears.
+            if name != "minimal.slint" {
+                for p in ["battery-visible", "battery-level", "battery-charging", "battery-text"] {
+                    assert!(props.contains(p), "{name} missing battery property {p}");
+                }
             }
             assert!(cbs.contains(CB_MUTE), "{name} missing callback {CB_MUTE}");
             // Instantiation must succeed on the (testing) platform too.

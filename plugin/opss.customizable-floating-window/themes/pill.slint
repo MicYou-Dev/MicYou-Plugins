@@ -24,6 +24,11 @@ export component FloatingPill inherits Window {
     in property <string> device-label: "";
     in property <string> device-mode: "";
     in property <string> info-text: "";        // "48.0kHz · 1ch · q13ms"（helper 预格式化）
+    // 手机电量（宿主回传 audio_state.battery；缺失即 battery-visible = false）
+    in property <bool> battery-visible: false;
+    in property <int> battery-level: -1;
+    in property <bool> battery-charging: false;
+    in property <string> battery-text: "";     // "78%"（helper 预格式化）
     in property <string> arc-path: "";
     in property <string> wdis-text: "";        // WDIS 语音转录文本
     in property <bool> wdis-visible: false;    // WDIS 展示开关（helper 定时收回）
@@ -45,7 +50,8 @@ export component FloatingPill inherits Window {
     in property <color> panel: #16181de6;      // 半透明深色底
 
     // 窗口高度随 WDIS 下伸面板生长（顶边锚定不动）
-    width: 224px; height: 56px + box-h;
+    // 窗口宽度随电量徽标自适应，避免把「时长 / 设备 / 电量」挤成省略号
+    width: root.battery-visible ? 248px : 224px; height: 56px + box-h;
     no-frame: true;
     always-on-top: true;
     background: transparent;
@@ -54,6 +60,12 @@ export component FloatingPill inherits Window {
 
     property <color> content: muted ? error : (streaming ? accent : idle);
     property <color> dot: muted ? error : (streaming ? ok : idle);
+    // 电量徽标：低电红、充电绿、其余中性灰
+    // 电量徽标配色：低电红、充电绿，其余沿用中性灰（保留 pill 原有的克制风格；
+    // 淡蓝那套只给 ring 的中心使用）
+    property <color> bat-color: root.battery-level <= 20 ? root.error
+        : (root.battery-charging ? root.ok : #9aa0a6);
+    property <float> bat-fill: min(1.0, max(0.0, root.battery-level * 1.0 / 100.0));
     property <float> lvl: min(1, max(0, smooth-level));
     property <float> pulse: 1;
     property <bool> blink: true;
@@ -170,14 +182,47 @@ export component FloatingPill inherits Window {
                         font-weight: 600;
                         vertical-alignment: center;
                     }
+                    // 设备 / 格式信息：有电量徽标时让出宽度，优先显示设备名
                     Text {
                         text: root.streaming
-                            ? (root.device-label != "" ? root.device-label : root.info-text)
+                            ? (root.device-label != "" ? root.device-label : (root.battery-visible ? "" : root.info-text))
                             : "未连接";
                         color: #9aa0a6;
                         overflow: elide;
                         vertical-alignment: center;
                         horizontal-stretch: 1;
+                    }
+                    // 电量徽标：图标 + 百分比，无电量时整块不占位（窗口宽度也随之收窄）
+                    HorizontalLayout {
+                        visible: root.battery-visible;
+                        spacing: 4px;
+                        alignment: end;
+                        Rectangle {
+                            width: 16px; height: 9px;
+                            border-width: 1px;
+                            border-radius: 2px;
+                            border-color: root.bat-color;
+                            background: transparent;
+                            Rectangle {
+                                x: 1px; y: 1px;
+                                width: max(0px, 13px * root.bat-fill);
+                                height: 6px;
+                                border-radius: 1px;
+                                background: root.bat-color;
+                            }
+                            Rectangle {
+                                x: 16px; y: 2px;
+                                width: 2px; height: 5px;
+                                border-radius: 1px;
+                                background: root.bat-color;
+                            }
+                        }
+                        Text {
+                            text: root.battery-text;
+                            color: root.bat-color;
+                            font-weight: 600;
+                            vertical-alignment: center;
+                        }
                     }
                 }
             }

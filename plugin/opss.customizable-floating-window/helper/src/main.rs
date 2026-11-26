@@ -192,6 +192,10 @@ fn compile_check(path: &Path) -> i32 {
                 "session-text",
                 "device-label",
                 "device-mode",
+                "battery-visible",
+                "battery-level",
+                "battery-charging",
+                "battery-text",
                 "info-text",
                 "arc-path",
                 "bars-path",
@@ -829,6 +833,8 @@ fn run_selftest(theme_path: &Path, prefix: String, shared: Arc<Shared>) {
         session_text: "12:34".into(),
         device_label: "MicYou Mobile".into(),
         device_mode: "wifi".into(),
+        battery_level: Some(78),
+        battery_charging: false,
     };
     set_state(&streaming, &shared);
     if std::env::var_os("CFW_SELFTEST_WDIS").is_some() {

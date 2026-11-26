@@ -255,6 +255,10 @@ const CONTRACT = `输入属性 (in property，缺失即忽略):
   session-text string    "M:SS" / "H:MM:SS"
   device-label string    已连接设备名
   device-mode string     wifi / usb / web
+  battery-visible bool   手机上报了有效电量（主题据此显隐）
+  battery-level int      0..100；未知为 -1
+  battery-charging bool  手机是否在充电
+  battery-text string    "78%"（helper 预格式化）
   info-text string       "48.0kHz · 1ch · q13ms"
   arc-path string        100×100 视图框圆弧 SVG path（r=45, 12 点起顺时针, 随 smooth-level）
   bars-path string       100×100 视图框 8 根旋转波形条线段（helper ~30Hz 推进相位）

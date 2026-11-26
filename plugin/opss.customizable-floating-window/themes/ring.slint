@@ -31,6 +31,11 @@ export component FloatingRing inherits Window {
     in property <string> device-label: "";
     in property <string> device-mode: "";
     in property <string> info-text: "";
+    // 手机电量（宿主回传 audio_state.battery；缺失即 battery-visible = false）
+    in property <bool> battery-visible: false;
+    in property <int> battery-level: -1;
+    in property <bool> battery-charging: false;
+    in property <string> battery-text: "";     // "78%"（helper 预格式化）
     in property <string> arc-path: "";         // 100×100 视图框圆弧（随平滑电平）
     in property <string> bars-path: "";        // 100×100 视图框 8 根波形条线段
     in property <string> wdis-text: "";        // WDIS 语音转录文本
@@ -124,14 +129,14 @@ export component FloatingRing inherits Window {
         opacity: root.streaming && !root.muted ? 1 : 0;
     }
 
-    // ── 中心辉光（电平驱动） ──
+    // ── 中心辉光（电平驱动；手机上报电量时让位给电量文本） ──
     Rectangle {
         property <length> d: 28px * root.lvl;
         width: d; height: d;
         x: (root.win - d) / 2; y: (root.win - d) / 2;
         border-radius: d / 2;
         background: root.content.with-alpha(0.18 * root.lvl);
-        opacity: root.streaming && !root.muted && root.lvl > 0.05 ? 1 : 0;
+        opacity: root.streaming && !root.muted && root.lvl > 0.05 && !root.battery-visible ? 1 : 0;
     }
 
     // ── 空闲中心圆点（v1 IdleVisualizer） ──
@@ -141,7 +146,58 @@ export component FloatingRing inherits Window {
         x: (root.win - d) / 2; y: (root.win - d) / 2;
         border-radius: d / 2;
         background: root.content.with-alpha(0.12);
-        opacity: !root.streaming && !root.muted ? 1 : 0;
+        opacity: !root.streaming && !root.muted && !root.battery-visible ? 1 : 0;
+    }
+
+    // ── 中心电量：手机上报时取代中心电平图案（静音时让位给静音斜杠） ──
+    //    图标 + 百分比：只写数字用户看不出是电量
+    //    配色跟内圈淡蓝环同源：accent 降透明度（0.45 ≈ 环的淡蓝观感），
+    //    低电 / 充电只换色相，不换饱和度，保持整体轻盈
+    property <float> bat-alpha: 0.45;
+    property <color> bat-hue: root.battery-level <= 20 ? root.error
+        : (root.battery-charging ? root.mon : root.accent);
+    property <color> bat-color: root.bat-hue.with-alpha(root.bat-alpha);
+    property <float> bat-fill: min(1.0, max(0.0, root.battery-level * 1.0 / 100.0));
+
+    VerticalLayout {
+        x: 0px; y: 0px;
+        width: root.win; height: root.win;
+        alignment: center;
+        spacing: 4px;
+        visible: root.battery-visible && !root.muted;
+
+        // 电量图标：外框 + 按百分比填充 + 正极帽
+        HorizontalLayout {
+            alignment: center;
+            Rectangle {
+                width: 26px; height: 12px;
+                border-width: 1.5px;
+                border-radius: 3px;
+                border-color: root.bat-color;
+                background: transparent;
+                Rectangle {
+                    x: 1.5px; y: 1.5px;
+                    width: max(0px, 23px * root.bat-fill);
+                    height: 9px;
+                    border-radius: 1.5px;
+                    background: root.bat-color;
+                }
+                Rectangle {
+                    x: 26px; y: 3px;
+                    width: 3px; height: 6px;
+                    border-radius: 1px;
+                    background: root.bat-color;
+                }
+            }
+        }
+
+        Text {
+            horizontal-alignment: center;
+            text: root.battery-text;
+            font-size: 11px;
+            font-weight: 700;
+            color: root.bat-color;
+        }
     }
 
     // ── 静音斜杠（v1 MutedVisualizer；静态对角线段，无需旋转） ──

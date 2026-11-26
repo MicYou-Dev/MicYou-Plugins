@@ -1,7 +1,7 @@
 {
   "id": "opss.customizable-floating-window",
   "name": "Customizable Floating Window",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A customizable floating window for MicYou status monitoring and control.",
   "descriptionI18n": {
     "zh": "可自定义的悬浮窗：用 .slint 主题文件绘制透明悬浮窗，实时展示音频状态与本次连接时长，左键切静音、拖动移窗、右键菜单。",

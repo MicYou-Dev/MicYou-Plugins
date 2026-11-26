@@ -269,6 +269,19 @@ pub struct AudioState {
     pub queued_ms: f64,
     #[serde(default)]
     pub muted: bool,
+    /// Phone battery (host >= 2.2.x). Older hosts omit the key entirely.
+    #[serde(default)]
+    pub battery: Option<Battery>,
+}
+
+/// Charge reported by the connected phone in `audio_state.battery`.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct Battery {
+    #[serde(default)]
+    pub level: i32,
+    #[serde(default)]
+    pub charging: bool,
 }
 
 pub fn audio_state() -> Option<AudioState> {

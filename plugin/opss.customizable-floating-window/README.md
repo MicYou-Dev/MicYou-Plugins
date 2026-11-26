@@ -7,7 +7,7 @@
 左键单击切静音、拖动移窗、右键交互——全部交互在 `.slint` 主题内定义。
 
 <div align="center">
-  <video src="https://github.com/user-attachments/assets/9eeae28e-4207-4b7c-b32f-7af50220d72a" 
+  <video src="https://github.com/user-attachments/assets/5eab3089-604a-48ac-bf1d-df13392b3755" 
          width="200" 
          autoplay 
          loop 
@@ -65,6 +65,11 @@ opss.customizable-floating-window/
 * 输入属性：`input-level` `processed-level` `smooth-level` `level-percent` `muted`
   `streaming` `monitoring` `sample-rate` `channels` `queued-ms` `session-seconds`
   `session-text` `device-label` `device-mode` `info-text` `arc-path` `bars-path`
+* 输入属性（电量，手机上报时才有）：`battery-visible` `battery-level` `battery-charging`
+  `battery-text`（helper 预格式化的 `"78%"`；`ring` 中心与 `pill` 信息行默认展示）
+  * `ring`：中心以「电池图标 + 百分比」取代电平图案，配色与内圈淡蓝同源（accent 半透明）；**静音时不显示电量**（让位给静音斜杠）
+  * `pill`：信息行右侧电量徽标（图标 + 百分比），窗口宽度随 `battery-visible` 从 224px 自适应到 248px，不挤压时长/设备名
+  * 电量为低电（≤20%）红、充电绿；ring 的其余状态用淡蓝，pill 的其余状态保持中性灰
 * 输入属性（转录）：`wdis-text` `wdis-visible`
 * 输出回调：`mute-toggle()` `monitoring-toggle()` `menu-action(string)`（仅 pill 菜单）
   `hide-window()` `drag-start()` `drag-move()` `drag-end()`（无参；helper 侧全局光标 1:1 跟踪）
