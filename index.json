@@ -79,7 +79,7 @@
         "zh-CN": "可自定义悬浮窗",
         "en": "Customizable Floating Window"
       },
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": "",
       "description": "A customizable floating window for MicYou status monitoring and control.",
       "descriptionI18n": {
