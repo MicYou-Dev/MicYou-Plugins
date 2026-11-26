@@ -219,10 +219,20 @@ show 后 150ms 起单shot 重试链（≤12 次，等窗口映射出句柄）：
 
 属性：`input-level processed-level smooth-level level-percent muted streaming
 monitoring sample-rate channels queued-ms session-seconds session-text
-device-label device-mode info-text arc-path bars-path wdis-text wdis-visible`
+device-label device-mode info-text arc-path bars-path wdis-text wdis-visible
+battery-visible battery-level battery-charging battery-text`
 回调：`mute-toggle() monitoring-toggle() menu-action(string) hide-window()
 drag-start() drag-move() drag-end()`（drag 三回调无参：helper 侧全局光标增量跟踪，
 密集鼠标事件下仍 1:1；见 §12.3）
+
+电量属性来自宿主 `audio_state.battery`（`{ level, charging }`）：收到有效 `0..=100`
+时才置 `battery-visible = true`，否则整套属性保持 `false / -1 / ""`——主题只按
+`battery-visible` 决定显隐即可，无需自己判断 -1。`battery-text` 是 helper 预格式化的
+`"78%"`（Slint 表达式里无法做数字转字符串）。
+
+内置主题的展示约定：`ring` 用「电池图标（外框 + 按百分比填充 + 正极帽）+ 百分比」占据中心，
+**静音时整组隐藏**，把中心让回静音斜杠；`pill` 在信息行右端展示同款小图标 + 百分比，
+窗口宽度按 `battery-visible` 在 224px / 248px 之间切换，避免把时长和设备名挤成省略号。
 
 ### 6.2 `ring.slint` ↔ v1 `FloatingMicWindow` 对照
 

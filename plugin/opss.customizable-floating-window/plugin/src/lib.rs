@@ -455,6 +455,12 @@ impl Core {
             session_text: session::format_duration(snap.seconds),
             device_label: snap.label,
             device_mode: snap.mode,
+            // 只有 0..=100 视为有效电量；其余（-1 / 未上报）保持 None
+            battery_level: st
+                .battery
+                .map(|b| b.level)
+                .filter(|level| (0..=100).contains(level)),
+            battery_charging: st.battery.is_some_and(|b| b.charging),
         };
         if let Some(h) = self.helper.as_ref() {
             h.send(&Cmd::State(payload.clone()));
@@ -474,6 +480,8 @@ impl Core {
             "sampleRate": p.sample_rate,
             "channels": p.channels,
             "queuedMs": (p.queued_ms * 10.0).round() / 10.0,
+            "batteryLevel": p.battery_level,
+            "batteryCharging": p.battery_charging,
         });
         let text = json.to_string();
         let now = Instant::now();

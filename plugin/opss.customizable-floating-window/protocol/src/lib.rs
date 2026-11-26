@@ -57,6 +57,14 @@ pub struct StatePayload {
     /// Label/mode of the connected device (empty when unknown).
     pub device_label: String,
     pub device_mode: String,
+    /// Phone battery percent (0..=100). `None` when the host does not report
+    /// one (no device, legacy phone, web client) — forward tolerant: older
+    /// helpers ignore the key, newer helpers hide the indicator when absent.
+    #[serde(default)]
+    pub battery_level: Option<i32>,
+    /// Whether the phone reports itself as charging.
+    #[serde(default)]
+    pub battery_charging: bool,
 }
 
 /// helper → plugin event.
